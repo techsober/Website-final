@@ -1,0 +1,43 @@
+---
+/**
+ * Icon — renders an inline SVG from the icon set. Colour is controlled by CSS
+ * (`stroke`/`fill` rules on the parent), exactly as in the mock, so existing
+ * selectors like `.nav-card .ico svg { stroke: ... }` keep working.
+ */
+import { ICONS } from "@lib/icons";
+
+interface Props {
+  name: keyof typeof ICONS;
+  size?: number;
+  width?: number;
+  height?: number;
+  /** stroke-width for outline icons (mock uses 1.8 for decorative, 2 for arrows). */
+  stroke?: number;
+  class?: string;
+}
+
+const {
+  name,
+  size = 24,
+  width,
+  height,
+  stroke = 1.8,
+  class: className,
+} = Astro.props;
+
+const icon = ICONS[name];
+const w = width ?? size;
+const h = height ?? size;
+---
+
+<svg
+  width={w}
+  height={h}
+  viewBox="0 0 24 24"
+  fill={icon.solid ? "currentColor" : "none"}
+  stroke-width={icon.solid ? undefined : stroke}
+  class={className}
+  aria-hidden="true"
+  focusable="false"
+  set:html={icon.body}
+/>
