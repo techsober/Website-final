@@ -42,10 +42,10 @@ src/
   pages/        index, portfolio, about, resources, contact,
                 blog/ (index, [page], [slug], category/[cat]),
                 projects/ (index, [slug])
-  content/      blog/*.md (TinaCMS edits these) · projects/*.md
+  content/      blog/*.md · projects/*.md · products/*.md  (all TinaCMS-edited)
   styles/       tokens.css (design tokens) · global.css
   lib/          site.ts (config + flags) · content.ts · icons.ts · youtube.ts
-  data/         products.ts (Resources + Stripe Payment Links)
+  data/         home.json · about.json · portfolio.json  (page content, TinaCMS)
 functions/api/  contact.ts · subscribe.ts · stripe-webhook.ts · download.ts
 public/         robots.txt, favicon, og-default image
 tina/           config.ts (TinaCMS schema)
@@ -64,9 +64,18 @@ slate); gold is reserved for honesty notes and result pills.
 
 ## Writing & publishing blog posts (TinaCMS)
 
-Posts are Markdown files in `src/content/blog/` with typed frontmatter. You can
-edit them by hand, or visually with **TinaCMS** — no terminal needed once it's
-running.
+**TinaCMS is your no-code admin for the entire site** — no database. It edits
+git-backed files, so every change is a commit that triggers a Cloudflare
+redeploy. The schema (`tina/config.ts`) covers:
+
+| In TinaCMS | Edits | Lives in |
+|---|---|---|
+| **Blog Posts** | articles | `src/content/blog/*.md` |
+| **Projects** | project landing pages | `src/content/projects/*.md` |
+| **Resources / Products** | PDFs, prices, Payment Links | `src/content/products/*.md` |
+| **Homepage** | hero, nav cards, featured work, headings | `src/data/home.json` |
+| **About page** | story, pillars, stats | `src/data/about.json` |
+| **Portfolio page** | stat strip, project cards | `src/data/portfolio.json` |
 
 **Local visual editing (no account required):**
 
@@ -74,16 +83,23 @@ running.
 npm run tina:dev
 ```
 
-Then open **http://localhost:4321/admin/index.html**. Edit posts in a rich
-editor; saving writes back to the Markdown files (git-backed). Commit + push to
-publish.
+Then open **http://localhost:4321/admin/index.html** and edit anything above;
+saving writes back to the files. Commit + push to publish.
 
-**Publish from anywhere (TinaCMS Cloud, optional):** create a project at
-[app.tina.io](https://app.tina.io), then set `PUBLIC_TINA_CLIENT_ID` and
-`TINA_TOKEN`. Editors visit `/admin`, log in, and changes are committed to the
-repo automatically — Cloudflare redeploys on push.
+**Publish from any browser (TinaCMS Cloud — recommended for non-technical use):**
 
-**Frontmatter** (matches the schema in `src/content.config.ts`):
+1. Go to [app.tina.io](https://app.tina.io), sign in with GitHub, and create a
+   project pointing at this repo + your production branch.
+2. Copy the **Client ID** and create a **read-only token**.
+3. In Cloudflare Pages → Settings → Environment variables, add
+   `PUBLIC_TINA_CLIENT_ID` and `TINA_TOKEN`, then redeploy.
+4. Visit **`https://yourdomain/admin`**, log in with GitHub, and edit. Saves
+   commit to the repo and the site rebuilds automatically.
+
+The build only generates `/admin` when those two keys exist, so nothing breaks
+before you set them up.
+
+**Blog frontmatter** (matches the schema in `src/content.config.ts`):
 
 ```yaml
 ---
@@ -106,21 +122,25 @@ run dev` but excluded from production builds.
 ## Adding a product / Stripe Payment Link
 
 1. **Create the product** in Stripe → make a **Payment Link**.
-2. Open **`src/data/products.ts`** and add (or edit) an entry. Paste the
-   Payment Link into `paymentLink`, or wire it to an env var:
+2. Add the product in **TinaCMS → Resources / Products → Create** (or add a
+   Markdown file to `src/content/products/`). Paste the Payment Link into the
+   **Stripe Payment Link** field:
 
-   ```ts
-   {
-     id: "ai-workflow-vault",
-     title: "The AI Workflow Vault",
-     description: "…",
-     format: "PDF · 24 pages",
-     price: 12,
-     currency: "GBP",
-     paymentLink: import.meta.env.PUBLIC_STRIPE_LINK_VAULT ?? "#",
-     learn: ["…", "…", "…"],
-     coverLabel: "The AI Workflow Vault",
-   }
+   ```yaml
+   ---
+   title: "The AI Workflow Vault"
+   description: "What's inside / the outcome."
+   format: "PDF · 24 pages"
+   price: 12
+   currency: "GBP"
+   free: false
+   paymentLink: "https://buy.stripe.com/your-link"
+   learn:
+     - "Bullet one"
+     - "Bullet two"
+   coverLabel: "The AI Workflow Vault"
+   order: 1
+   ---
    ```
 
 3. **Free lead magnets:** set `free: true` (omit `price`). The card swaps the
@@ -176,7 +196,7 @@ Each is dormant until its env keys exist. Nothing here can break a build.
 | **Cloudflare Analytics** | `PUBLIC_CF_ANALYTICS_TOKEN` | Cookieless beacon in `<head>`. No banner needed. |
 | **Giscus comments** | `PUBLIC_GISCUS_REPO` + `PUBLIC_GISCUS_REPO_ID` (+ category ids) | Blog posts. From [giscus.app](https://giscus.app). |
 | **Pagefind search** | _none_ | Built automatically by `npm run build`. |
-| **Stripe selling** | Payment Links in `products.ts` | Works today, no keys needed. |
+| **Stripe selling** | Payment Links per product in TinaCMS | Works today, no keys needed. |
 | **Stripe gated delivery** | `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` + R2 | Future-ready, inert until set (below). |
 | **YouTube rail** | `YT_API_KEY` + `YT_CHANNEL_ID` | Build-time fetch of 3 newest uploads; skipped entirely if unset (below). |
 
