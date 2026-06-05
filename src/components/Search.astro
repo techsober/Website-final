@@ -1,0 +1,83 @@
+---
+/**
+ * Search — Pagefind UI over the built blog. Pagefind indexes the static output
+ * in a postbuild step, so its assets only exist in the production build. In
+ * dev we render a disabled box with a note (graceful degradation).
+ */
+const isProd = import.meta.env.PROD;
+---
+
+<div class="ts-search">
+  {
+    isProd ? (
+      <div id="search" data-pagefind-ui />
+    ) : (
+      <div class="search-dev-note">
+        <input
+          type="search"
+          placeholder="Search posts…"
+          disabled
+          aria-label="Search posts (production only)"
+        />
+        <p>Search is generated at build time — run <code>npm run build</code> to try it.</p>
+      </div>
+    )
+  }
+</div>
+
+{
+  isProd && (
+    <>
+      <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+      <script src="/pagefind/pagefind-ui.js" is:inline />
+      <script is:inline>
+        window.addEventListener("DOMContentLoaded", () => {
+          if (window.PagefindUI) {
+            new window.PagefindUI({
+              element: "#search",
+              showSubResults: true,
+              showImages: false,
+              resetStyles: false,
+            });
+          }
+        });
+      </script>
+    </>
+  )
+}
+
+<style>
+  .ts-search {
+    /* Brand the Pagefind UI to match the site tokens. */
+    --pagefind-ui-primary: var(--lav-500);
+    --pagefind-ui-text: var(--slate-700);
+    --pagefind-ui-background: var(--white);
+    --pagefind-ui-border: var(--slate-300);
+    --pagefind-ui-tag: var(--lav-100);
+    --pagefind-ui-border-radius: 10px;
+    --pagefind-ui-font: var(--font);
+    max-width: 520px;
+  }
+  .search-dev-note input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--slate-300);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-family: var(--font);
+    font-size: 15px;
+    background: var(--off);
+    color: var(--slate-500);
+  }
+  .search-dev-note p {
+    font-size: 12.5px;
+    color: var(--slate-500);
+    margin-top: 8px;
+  }
+  .search-dev-note code {
+    font-family: ui-monospace, Menlo, monospace;
+    background: var(--lav-100);
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+/**
+ * EmailCapture — MailerLite signup. Posts to /api/subscribe via fetch with
+ * inline success/error states (no reload) and a honeypot. Degrades gracefully:
+ * when the key is absent in dev, the form is disabled with an explanatory note.
+ * Used in the footer and on Resources (lead magnets).
+ */
+import { FLAGS } from "@lib/site";
+
+interface Props {
+  source?: string;
+  placeholder?: string;
+  buttonLabel?: string;
+  note?: string;
+  class?: string;
+}
+
+const {
+  source = "site",
+  placeholder = "you@email.com",
+  buttonLabel = "Subscribe",
+  note = "No spam. Unsubscribe anytime.",
+  class: className = "",
+} = Astro.props;
+
+const uid = "ec-" + Math.random().toString(36).slice(2, 8);
+// Disable only in dev when MailerLite isn't configured, per the brief.
+const disabledInDev = !FLAGS.mailerlite && import.meta.env.DEV;
+const shownNote = disabledInDev
+  ? "Dev: set PUBLIC_MAILERLITE_ENABLED=true and MAILERLITE_API_KEY to enable."
+  : note;
+---
+
+<form class={`ec-form ${className}`.trim()} data-source={source} novalidate>
+  <div class="email-capture">
+    <label class="sr-only" for={uid}>Email address</label>
+    <input
+      id={uid}
+      type="email"
+      name="email"
+      required
+      placeholder={placeholder}
+      autocomplete="email"
+      disabled={disabledInDev}
+    />
+    <!-- Honeypot: hidden from humans, tempting to bots. -->
+    <div class="hp-field" aria-hidden="true">
+      <label for={`${uid}-hp`}>Leave this field empty</label>
+      <input
+        id={`${uid}-hp`}
+        type="text"
+        name="company_url"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      disabled={disabledInDev}>{buttonLabel}</button
+    >
+  </div>
+  {shownNote && <p class="capture-note">{shownNote}</p>}
+  <div class="form-ok ec-ok" role="status" aria-live="polite"></div>
+  <div class="form-err ec-err" role="alert" aria-live="assertive"></div>
+</form>
+
+<script>
+  // One handler binds every EmailCapture instance on the page (footer + body).
+  document.querySelectorAll<HTMLFormElement>(".ec-form").forEach((form) => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const ok = form.querySelector<HTMLElement>(".ec-ok")!;
+      const err = form.querySelector<HTMLElement>(".ec-err")!;
+      const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+      ok.classList.remove("show");
+      err.classList.remove("show");
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      (data as any).source = form.dataset.source || "site";
+
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "…";
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.ok) {
+          ok.textContent = json.message || "✓ You're in — check your inbox.";
+          ok.classList.add("show");
+          form.reset();
+        } else {
+          err.textContent =
+            json.message || "Something went wrong. Please try again.";
+          err.classList.add("show");
+        }
+      } catch {
+        err.textContent = "Network error — please try again.";
+        err.classList.add("show");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  });
+</script>

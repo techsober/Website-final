@@ -1,0 +1,117 @@
+---
+/**
+ * BlogArchive — shared body for the blog index, its pagination pages, and the
+ * category routes. Header + crawlable category filter (real links) + Pagefind
+ * search + 6-per-page post grid + numbered pagination.
+ */
+import Eyebrow from "./Eyebrow.astro";
+import Card from "./Card.astro";
+import Pagination from "./Pagination.astro";
+import Search from "./Search.astro";
+import { BLOG_CATEGORIES } from "@lib/site";
+import {
+  formatDate,
+  readingTime,
+  slugifyCategory,
+  type Post,
+} from "@lib/content";
+
+interface Props {
+  posts: Post[];
+  heading: string;
+  sub: string;
+  activeCat?: string; // "all" or a category slug
+  currentPage?: number;
+  totalPages?: number;
+  basePath?: string;
+}
+
+const {
+  posts,
+  heading,
+  sub,
+  activeCat = "all",
+  currentPage = 1,
+  totalPages = 1,
+  basePath = "/blog",
+} = Astro.props;
+
+const blogThumb = "background:linear-gradient(135deg,var(--off),#EBE1F8)";
+const filters = [
+  { label: "All", slug: "all", href: "/blog" },
+  ...BLOG_CATEGORIES.map((c) => ({
+    label: c,
+    slug: slugifyCategory(c),
+    href: `/blog/category/${slugifyCategory(c)}`,
+  })),
+];
+---
+
+{/* HEADER */}
+<div class="page-head">
+  <div class="container">
+    <Eyebrow>Blog</Eyebrow>
+    <h1>{heading}</h1>
+    <p class="sub">{sub}</p>
+  </div>
+</div>
+
+{/* CATEGORY FILTER — real, crawlable routes */}
+<div class="filterbar">
+  <div class="container">
+    <div class="filter-row scroll" aria-label="Filter by category">
+      {
+        filters.map((f) => (
+          <a
+            href={f.href}
+            class={`filter-pill ${activeCat === f.slug ? "active" : ""}`}
+            aria-current={activeCat === f.slug ? "page" : undefined}
+          >
+            {f.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+{/* POSTS */}
+<section style="padding-top:64px">
+  <div class="container">
+    <div style="margin-bottom:36px"><Search /></div>
+
+    {
+      posts.length === 0 ? (
+        <p style="color:var(--slate-500);padding:24px 0">
+          No posts here yet — check back soon.
+        </p>
+      ) : (
+        <div class="grid-3">
+          {posts.map((post) => (
+            <Card
+              class="reveal"
+              href={`/blog/${post.id}`}
+              category={post.data.category}
+              title={post.data.title}
+              excerpt={post.data.description}
+              placeholder="Cover"
+              image={post.data.cover}
+              imageAlt={post.data.coverAlt ?? post.data.title}
+              thumbStyle={post.data.cover ? undefined : blogThumb}
+            >
+              <span class="meta" slot="footer">
+                {`${readingTime(post.body, post.data.readingTime)} min read · ${formatDate(post.data.date)}`}
+              </span>
+            </Card>
+          ))}
+        </div>
+      )
+    }
+
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      basePath={basePath}
+    />
+  </div>
+</section>

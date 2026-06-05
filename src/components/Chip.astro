@@ -1,0 +1,14 @@
+---
+/**
+ * Chip — lavender category pill. `top` positions it as an overlay on a
+ * thumbnail (`.topchip`), matching the mock's card chips.
+ */
+interface Props {
+  top?: boolean;
+  class?: string;
+}
+const { top = false, class: className = "" } = Astro.props;
+const cls = `chip ${top ? "topchip" : ""} ${className}`.trim();
+---
+
+<span class={cls}><slot /></span>

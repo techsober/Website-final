@@ -1,0 +1,230 @@
+---
+/**
+ * Home — the approved mock rebuilt 1:1 as Astro components.
+ * Hero · 2×2 button-nav · 3 featured portfolio cards · 3 live blog snippets ·
+ * BrandEnquiry · Footer. This page sets the component library the rest reuse.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Eyebrow from "@components/Eyebrow.astro";
+import Button from "@components/Button.astro";
+import Icon from "@components/Icon.astro";
+import SectionHead from "@components/SectionHead.astro";
+import Card from "@components/Card.astro";
+import MetricPill from "@components/MetricPill.astro";
+import BrandEnquiry from "@components/BrandEnquiry.astro";
+import { SITE, SOCIALS } from "@lib/site";
+import {
+  getPublishedPosts,
+  formatDate,
+  readingTime,
+  slugifyCategory,
+} from "@lib/content";
+
+const posts = (await getPublishedPosts()).slice(0, 3);
+
+// Button-nav cards (2×2).
+const navCards = [
+  {
+    href: SOCIALS.youtube,
+    icon: "youtube",
+    title: "YouTube Content",
+    desc: "Long-form reviews, AI breakdowns and tutorials.",
+    arr: "Browse videos →",
+    external: true,
+  },
+  {
+    href: "/projects",
+    icon: "ai",
+    title: "AI Projects",
+    desc: "Working tools and agents you can open and try.",
+    arr: "Open the apps →",
+  },
+  {
+    href: "/blog",
+    icon: "doc",
+    title: "Blog",
+    desc: "Guides and honest takes, written to be found.",
+    arr: "Read posts →",
+  },
+  {
+    href: "/contact",
+    icon: "mail",
+    title: "Get in Touch",
+    desc: "Brand collabs and sponsorships — let's talk.",
+    arr: "Start a chat →",
+  },
+];
+
+// Featured work — curated, with internal links to the real project/post pages.
+const featured = [
+  {
+    href: "/projects/hermes-agent",
+    category: "AI",
+    title: "Hermes Agent: full setup walkthrough",
+    excerpt:
+      "Step-by-step build of an autonomous agent, costs and limits included.",
+    metric: "128k views in 30 days",
+  },
+  {
+    href: "/blog/honest-headphone-review-two-weeks",
+    category: "Review",
+    title: "The honest headphone review",
+    excerpt:
+      "What the spec sheet won't tell you after two weeks of real use.",
+    metric: "+1,900 subscribers",
+  },
+  {
+    href: "/projects/market-research-agent",
+    category: "AI",
+    title: "Stock & crypto research agent",
+    excerpt:
+      "Wiring live market data into an AI workflow — and where it breaks.",
+    metric: "9.2% avg retention lift",
+  },
+];
+
+const blogThumb =
+  "background:linear-gradient(135deg,var(--off),#EBE1F8)";
+
+// Organization + WebSite JSON-LD for the homepage.
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+    founder: { "@type": "Person", name: SITE.author },
+    sameAs: Object.values(SOCIALS),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+  },
+];
+---
+
+<BaseLayout
+  title={`${SITE.name} — ${SITE.tagline}`}
+  description={SITE.description}
+  jsonLd={jsonLd}
+>
+  {/* HERO */}
+  <div class="hero">
+    <div class="container">
+      <span class="eyebrow fu d1">Honest tech &amp; AI</span>
+      <h1 class="fu d2">Tech and AI,<br /><em>minus the hype.</em></h1>
+      <p class="sub fu d3">
+        Reviews, AI tools and real workflows — with the costs, limits and
+        marketing spin that other channels quietly skip.
+      </p>
+      <div class="actions fu d4">
+        <Button variant="primary" href={SOCIALS.youtube} external
+          >▶ Watch on YouTube</Button
+        >
+        <Button variant="secondary" href="/projects">See AI projects</Button>
+      </div>
+      <div class="trust fu d5">
+        <b>4,300+</b> subscribers <span class="sep"></span> Honest reviews
+        <span class="sep"></span> AI workflows that actually work
+      </div>
+    </div>
+  </div>
+
+  {/* BUTTON NAV */}
+  <div class="navband">
+    <div class="container">
+      <div class="nav-grid">
+        {
+          navCards.map((c) => (
+            <a
+              href={c.href}
+              class="nav-card reveal"
+              {...(c.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              <div class="ico">
+                <Icon name={c.icon} width={22} height={22} />
+              </div>
+              <h4>{c.title}</h4>
+              <p>{c.desc}</p>
+              <span class="arr">{c.arr}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  {/* FEATURED PORTFOLIO */}
+  <section>
+    <div class="container">
+      <SectionHead
+        class="reveal"
+        eyebrow="Featured work"
+        title="Recent work that landed"
+        linkHref="/portfolio"
+        linkLabel="View portfolio"
+      />
+      <div class="grid-3">
+        {
+          featured.map((f) => (
+            <Card
+              class="reveal"
+              href={f.href}
+              category={f.category}
+              title={f.title}
+              excerpt={f.excerpt}
+              play
+              placeholder="Your still"
+            >
+              <MetricPill slot="footer">{f.metric}</MetricPill>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* BLOG SNIPPETS (live from the content collection) */}
+  <div class="blogband">
+    <section>
+      <div class="container">
+        <SectionHead
+          class="reveal"
+          eyebrow="From the blog"
+          title="Reading, no fluff"
+          linkHref="/blog"
+          linkLabel="All posts"
+        />
+        <div class="grid-3">
+          {
+            posts.map((post) => (
+              <Card
+                class="reveal"
+                href={`/blog/${post.id}`}
+                category={post.data.category}
+                title={post.data.title}
+                excerpt={post.data.description}
+                placeholder="Cover"
+                image={post.data.cover}
+                imageAlt={post.data.coverAlt ?? post.data.title}
+                thumbStyle={post.data.cover ? undefined : blogThumb}
+              >
+                <span class="meta" slot="footer">
+                  {`${readingTime(post.body, post.data.readingTime)} min read · ${formatDate(post.data.date)}`}
+                </span>
+              </Card>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+
+  {/* BRAND ENQUIRY */}
+  <BrandEnquiry />
+</BaseLayout>

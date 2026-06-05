@@ -1,0 +1,75 @@
+/* ============================================================================
+   TechSober — Design Tokens
+   Ported verbatim from the approved mock (techsober-home.html :root).
+   The mock wins on visuals; these are the single source of truth for colour,
+   radius, shadow and type. Change one variable here -> the whole site restyles.
+   ========================================================================== */
+
+:root {
+  /* --- Brand: lavender (accent, not a flood) --- */
+  --lav-500: #8c5fc1;
+  --lav-400: #9e79cb;
+  --lav-300: #bca2db;
+  --lav-100: #f3edfb;
+
+  /* --- Surfaces --- */
+  --white: #ffffff;
+  --off: #fafafb;
+
+  /* --- Ink & slate (text) --- */
+  --ink: #1f2430;
+  --slate-700: #3a3f4b;
+  --slate-500: #6b7280;
+  --slate-300: #d7dae0;
+
+  /* --- Gold (honesty notes, callouts, warnings) --- */
+  --gold-500: #c98a1e;
+  --gold-100: #fbf3e2;
+
+  /* --- Layout --- */
+  --container: 1180px;
+
+  /* --- Radius --- */
+  --r-card: 14px;
+  --r-btn: 10px;
+  --r-input: 10px;
+  --r-pill: 999px;
+
+  /* --- Shadows (subtle only) --- */
+  --shadow-rest: 0 1px 2px rgba(31, 36, 48, 0.05);
+  --shadow-hover: 0 14px 30px rgba(31, 36, 48, 0.09);
+
+  /* --- Font --- */
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* --- Spacing scale (8px base) — 4·8·12·16·24·32·48·64·96·112·128 --- */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-112: 112px;
+  --space-128: 128px;
+
+  /* Section vertical padding — 112 desktop, steps down responsively (global.css). */
+  --space-section: 112px;
+
+  /* Container gutter */
+  --gutter: 24px;
+
+  /* --- Type scale (matches the mock's clamps + the wireframe scale) --- */
+  --fs-h1: clamp(38px, 6vw, 60px);
+  --fs-h2: clamp(28px, 4vw, 38px);
+  --fs-h3: 21px;
+  --fs-h4: 19px;
+  --fs-body-lg: clamp(17px, 2.2vw, 20px);
+  --fs-body: 17px;
+  --fs-small: 14px;
+  --fs-eyebrow: 13px;
+  --fs-btn: 16px;
+}

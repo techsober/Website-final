@@ -1,0 +1,64 @@
+---
+/**
+ * YouTubeRail — the "Latest from YouTube" slot for the blog (per wireframe).
+ * Renders the 3 newest uploads, fetched at build time. Completely skipped (no
+ * markup) until YT_API_KEY + YT_CHANNEL_ID exist, so it's inert in v1.
+ */
+import Icon from "./Icon.astro";
+import Eyebrow from "./Eyebrow.astro";
+import { getLatestVideos, youtubeEnabled } from "@lib/youtube";
+
+const videos = youtubeEnabled() ? await getLatestVideos(3) : [];
+---
+
+{
+  videos.length > 0 && (
+    <div class="blogband">
+      <section>
+        <div class="container">
+          <div class="sec-head">
+            <div>
+              <Eyebrow>From the channel</Eyebrow>
+              <h2>Latest from YouTube</h2>
+            </div>
+            <a href="https://www.youtube.com/@techsober" class="ghost" target="_blank" rel="noopener noreferrer">
+              All videos <Icon name="arrow" width={16} height={16} stroke={2} />
+            </a>
+          </div>
+          <div class="grid-3">
+            {videos.map((v) => (
+              <article class="card reveal">
+                <a
+                  href={v.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="thumb"
+                  aria-label={v.title}
+                >
+                  <img
+                    src={v.thumbnail}
+                    alt={`Thumbnail for ${v.title}`}
+                    width={640}
+                    height={360}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="play">
+                    <Icon name="play" width={20} height={20} />
+                  </div>
+                </a>
+                <div class="body">
+                  <h3>
+                    <a href={v.url} target="_blank" rel="noopener noreferrer">
+                      {v.title}
+                    </a>
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

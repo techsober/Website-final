@@ -1,0 +1,90 @@
+---
+/**
+ * Seo — all <head> meta in one place: title, description, canonical,
+ * Open Graph, Twitter card, robots, and optional JSON-LD structured data.
+ * Lives inside BaseLayout's <head>.
+ */
+import { SITE } from "@lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Override canonical path; defaults to the current URL. */
+  canonical?: string;
+  image?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  /** One object or an array of JSON-LD graphs. */
+  jsonLd?: Record<string, any> | Record<string, any>[];
+}
+
+const {
+  title,
+  description = SITE.description,
+  canonical,
+  image = SITE.ogImage,
+  type = "website",
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  author,
+  jsonLd,
+} = Astro.props;
+
+// Suffix the brand unless the title already includes it (or is the brand itself).
+const fullTitle = !title
+  ? `${SITE.name} — ${SITE.tagline}`
+  : title.includes(SITE.name)
+    ? title
+    : `${title} — ${SITE.name}`;
+
+const base = Astro.site ?? new URL(SITE.url);
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, base).href.replace(
+  /\/$/,
+  "",
+);
+const ogImage = new URL(image, base).href;
+const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+{/* Open Graph */}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content={SITE.locale} />
+{type === "article" && publishedTime && (
+  <meta property="article:published_time" content={publishedTime} />
+)}
+{type === "article" && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime} />
+)}
+{type === "article" && (
+  <meta property="article:author" content={author ?? SITE.author} />
+)}
+
+{/* Twitter */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+{/* JSON-LD structured data */}
+{
+  jsonLdList.map((graph) => (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(graph)}
+    />
+  ))
+}

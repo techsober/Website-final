@@ -1,0 +1,24 @@
+---
+/**
+ * /projects/[slug] — renders a project's dedicated landing page from its
+ * Markdown entry via the ProjectPage layout.
+ */
+import { render } from "astro:content";
+import ProjectPage from "@layouts/ProjectPage.astro";
+import { getProjects } from "@lib/content";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ProjectPage project={entry.data} slug={entry.id}>
+  <Content />
+</ProjectPage>

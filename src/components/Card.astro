@@ -1,0 +1,92 @@
+---
+/**
+ * Card — the shared portfolio / blog / project card from the mock
+ * (`<article class="card">`). Flexible enough for:
+ *  - portfolio: gradient or image thumb + play overlay + gold MetricPill
+ *  - blog: cover image + category chip + meta row
+ *
+ * The title links when `href` is set; the thumbnail mirrors that link but is
+ * hidden from assistive tech to avoid a duplicate announcement.
+ * Footer content (MetricPill / meta) goes in the `footer` slot.
+ */
+import Chip from "./Chip.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  href?: string;
+  title: string;
+  excerpt?: string;
+  category?: string;
+  image?: string;
+  imageAlt?: string;
+  width?: number;
+  height?: number;
+  play?: boolean;
+  placeholder?: string;
+  thumbStyle?: string;
+  loading?: "lazy" | "eager";
+  class?: string;
+}
+
+const {
+  href,
+  title,
+  excerpt,
+  category,
+  image,
+  imageAlt = "",
+  width = 640,
+  height = 360,
+  play = false,
+  placeholder,
+  thumbStyle,
+  loading = "lazy",
+  class: className = "",
+} = Astro.props;
+---
+
+<article class={`card ${className}`.trim()}>
+  <div class="thumb" style={thumbStyle}>
+    {category && <Chip top>{category}</Chip>}
+    {
+      image ? (
+        href ? (
+          <a href={href} aria-hidden="true" tabindex="-1">
+            <img
+              src={image}
+              alt={imageAlt}
+              width={width}
+              height={height}
+              loading={loading}
+              decoding="async"
+            />
+          </a>
+        ) : (
+          <img
+            src={image}
+            alt={imageAlt}
+            width={width}
+            height={height}
+            loading={loading}
+            decoding="async"
+          />
+        )
+      ) : null
+    }
+    {
+      play && (
+        <div class="play">
+          <Icon name="play" width={20} height={20} />
+        </div>
+      )
+    }
+    {placeholder && <span class="ph">{placeholder}</span>}
+  </div>
+  <div class="body">
+    <h3>
+      {href ? <a href={href}>{title}</a> : title}
+    </h3>
+    {excerpt && <p>{excerpt}</p>}
+    <slot name="footer" />
+  </div>
+</article>

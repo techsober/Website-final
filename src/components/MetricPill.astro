@@ -1,0 +1,20 @@
+---
+/**
+ * MetricPill — the gold "result" pill (▲ 128k views …). Designed as a single
+ * swappable component so static numbers can later become live YouTube Data API
+ * counts without any layout change (per the wireframe's future-API note).
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Show the trend-up icon (default true). */
+  icon?: boolean;
+  class?: string;
+}
+const { icon = true, class: className = "" } = Astro.props;
+---
+
+<span class={`metric ${className}`.trim()}>
+  {icon && <Icon name="trend" width={14} height={14} stroke={2} />}
+  <slot />
+</span>

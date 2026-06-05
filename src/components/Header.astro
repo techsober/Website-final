@@ -1,0 +1,91 @@
+---
+/**
+ * Header — sticky global nav, ported 1:1 from the mock. Active link is derived
+ * from the current path. Includes the sticky-shadow + mobile-menu behaviour
+ * (minimal JS, respects reduced-motion via CSS).
+ */
+import { NAV } from "@lib/site";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(href + "/");
+---
+
+<header id="hdr">
+  <div class="container nav">
+    <a href="/" class="brand" aria-label="TechSober — home"
+      >Tech<span>sober</span><span class="dot"></span></a
+    >
+    <nav class="nav-links" aria-label="Primary">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class={isActive(item.href) ? "active" : ""}
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="nav-cta">
+      <a href="/contact" class="btn btn-primary">Get in Touch</a>
+      <button
+        class="hamburger"
+        id="ham"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mob"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="mobile-menu"
+    id="mob"
+    style="background:var(--off);border-top:1px solid var(--slate-300);padding:18px 24px"
+  >
+    {
+      NAV.map((item) => (
+        <a
+          href={item.href}
+          style={`display:block;padding:12px 0;${isActive(item.href) ? "font-weight:600;color:var(--lav-500)" : ""}`}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+    <a
+      href="/contact"
+      class="btn btn-primary"
+      style="margin-top:12px;width:100%;justify-content:center">Get in Touch</a
+    >
+  </div>
+</header>
+
+<script>
+  // Sticky-header shadow after a small scroll.
+  const hdr = document.getElementById("hdr");
+  const onScroll = () =>
+    hdr?.classList.toggle("scrolled", window.scrollY > 8);
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Mobile menu toggle (accessible: tracks aria-expanded).
+  const ham = document.getElementById("ham");
+  const mob = document.getElementById("mob");
+  ham?.addEventListener("click", () => {
+    const open = mob?.classList.toggle("open");
+    ham.setAttribute("aria-expanded", String(Boolean(open)));
+    ham.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  });
+  // Close the menu when a link is tapped.
+  mob?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => {
+      mob.classList.remove("open");
+      ham?.setAttribute("aria-expanded", "false");
+    }),
+  );
+</script>

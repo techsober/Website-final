@@ -1,0 +1,93 @@
+---
+/**
+ * BaseLayout — the shell for every page: <head> (fonts + Seo + analytics),
+ * skip link, global Header, <main>, Footer, and the shared reveal-on-scroll
+ * script. All SEO props pass straight through to the Seo component.
+ */
+import "@styles/global.css";
+import Seo from "@components/Seo.astro";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import { SITE, ANALYTICS_TOKEN } from "@lib/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  jsonLd?: Record<string, any> | Record<string, any>[];
+  mainClass?: string;
+}
+
+const { mainClass, ...seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#8c5fc1" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* Fonts — Inter with display=swap (system-sans fallback while loading). */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Favicons */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <Seo {...seo} />
+
+    {/* Cloudflare Web Analytics — cookieless beacon, only when a token exists. */}
+    {
+      ANALYTICS_TOKEN && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${ANALYTICS_TOKEN}"}`}
+        />
+      )
+    }
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main" class={mainClass}>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Reveal-on-scroll — ported from the mock. CSS forces visibility under
+      // prefers-reduced-motion, so this is purely additive.
+      const els = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window && els.length) {
+        const io = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            }),
+          { threshold: 0.12 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add("in"));
+      }
+    </script>
+  </body>
+</html>

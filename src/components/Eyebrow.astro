@@ -1,0 +1,9 @@
+---
+/** Eyebrow — small uppercase lavender label above headings. */
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+
+<span class={`eyebrow ${className}`.trim()}><slot /></span>

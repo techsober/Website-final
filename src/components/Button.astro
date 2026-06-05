@@ -1,0 +1,47 @@
+---
+/**
+ * Button — renders an <a> (when `href`) or a <button>. Variants map to the
+ * mock's .btn-primary / .btn-secondary / .ghost classes.
+ */
+interface Props {
+  variant?: "primary" | "secondary" | "ghost";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  id?: string;
+  class?: string;
+  /** Open external links in a new tab safely. */
+  external?: boolean;
+  [key: string]: any;
+}
+
+const {
+  variant = "primary",
+  href,
+  type = "button",
+  id,
+  class: className = "",
+  external = false,
+  ...rest
+} = Astro.props;
+
+const cls =
+  variant === "ghost"
+    ? `ghost ${className}`.trim()
+    : `btn btn-${variant} ${className}`.trim();
+
+const ext = external
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
+---
+
+{
+  href ? (
+    <a href={href} id={id} class={cls} {...ext} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} id={id} class={cls} {...rest}>
+      <slot />
+    </button>
+  )
+}

@@ -1,0 +1,37 @@
+---
+/**
+ * SectionHead — the eyebrow + H2 (left) with an optional ghost link (right),
+ * baseline-aligned. Matches the mock's `.sec-head` rows.
+ */
+import Eyebrow from "./Eyebrow.astro";
+import Icon from "./Icon.astro";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  linkHref?: string;
+  linkLabel?: string;
+  class?: string;
+}
+const {
+  eyebrow,
+  title,
+  linkHref,
+  linkLabel,
+  class: className = "",
+} = Astro.props;
+---
+
+<div class={`sec-head ${className}`.trim()}>
+  <div>
+    {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+    <h2>{title}</h2>
+  </div>
+  {
+    linkHref && linkLabel && (
+      <a href={linkHref} class="ghost">
+        {linkLabel} <Icon name="arrow" width={16} height={16} stroke={2} />
+      </a>
+    )
+  }
+</div>

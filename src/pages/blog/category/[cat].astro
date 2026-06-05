@@ -1,0 +1,51 @@
+---
+/**
+ * /blog/category/[cat] — crawlable category filters (AI, Tech, Review, Gadgets)
+ * as real routes, not query params.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import BlogArchive from "@components/BlogArchive.astro";
+import { getPostsByCategory, slugifyCategory } from "@lib/content";
+import { BLOG_CATEGORIES, SITE } from "@lib/site";
+
+export async function getStaticPaths() {
+  return BLOG_CATEGORIES.map((cat) => ({
+    params: { cat: slugifyCategory(cat) },
+    props: { cat },
+  }));
+}
+
+interface Props {
+  cat: (typeof BLOG_CATEGORIES)[number];
+}
+const { cat } = Astro.props;
+const slug = slugifyCategory(cat);
+const posts = await getPostsByCategory(slug);
+
+const heading = `${cat} posts`;
+const sub = `Honest ${cat.toLowerCase()} coverage from TechSober — the costs, limits and marketing spin left in.`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${cat} — TechSober Blog`,
+  description: sub,
+  url: new URL(`/blog/category/${slug}`, SITE.url).href,
+};
+---
+
+<BaseLayout
+  title={`${cat} — TechSober Blog`}
+  description={sub}
+  jsonLd={jsonLd}
+>
+  <BlogArchive
+    posts={posts}
+    heading={heading}
+    sub={sub}
+    activeCat={slug}
+    currentPage={1}
+    totalPages={1}
+    basePath={`/blog/category/${slug}`}
+  />
+</BaseLayout>
