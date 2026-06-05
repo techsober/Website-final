@@ -49,7 +49,7 @@ src/
 functions/api/  contact.ts · subscribe.ts · stripe-webhook.ts · download.ts
 public/         robots.txt, favicon, og-default image
 tina/           config.ts (TinaCMS schema)
-astro.config.mjs · wrangler.toml · .env.example
+astro.config.mjs · .env.example
 ```
 
 ### Design tokens — "change one variable, restyle the site"
@@ -148,8 +148,12 @@ on day one — no backend required.**
 5. Deploy. The `/functions` directory is auto-discovered as Pages Functions
    (`/api/contact`, `/api/subscribe`, `/api/stripe-webhook`, `/api/download`).
 
-`wrangler.toml` documents the output dir and optional R2 binding. Pagefind runs
-as a postbuild step, so search "just works" on the deployed site.
+> **Pick the "Pages" flow, not "Workers."** A correct Pages setup asks for a
+> *Build command* + *Build output directory* and never a "Deploy command." If
+> the build log shows `npx wrangler deploy`, the project was created as a Worker
+> — delete it and recreate via **Create → Pages → Connect to Git**.
+
+Pagefind runs as a postbuild step, so search "just works" on the deployed site.
 
 ### After your first deploy — SEO checklist
 
@@ -184,8 +188,10 @@ Payment Links cover selling today. For **automatic protected delivery** of the
 file after purchase:
 
 1. **Create an R2 bucket** and upload your product files (they live only in R2,
-   never at a public URL). Bind it as `DOWNLOADS` — uncomment the block in
-   `wrangler.toml`, or add the binding in the Pages dashboard.
+   never at a public URL). Bind it to the Pages project as `DOWNLOADS`:
+   dashboard → your Pages project → **Settings → Functions → R2 bucket bindings**
+   → add `DOWNLOADS` → your bucket. (For local `wrangler pages dev`, add an
+   `[[r2_buckets]]` binding named `DOWNLOADS` to a `wrangler.toml`.)
 2. Set secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
    `DOWNLOAD_SIGNING_SECRET` (any long random string), and `RESEND_API_KEY`
    (to email the link).
