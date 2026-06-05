@@ -60,4 +60,27 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, projects };
+const products = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/products" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    /** e.g. "PDF · 24 pages" */
+    format: z.string(),
+    /** Price in whole currency units; omit/0 for free items. */
+    price: z.number().optional(),
+    currency: z.string().default("GBP"),
+    free: z.boolean().default(false),
+    /** Stripe Payment Link URL (paid items). "#" is a safe placeholder. */
+    paymentLink: z.string().default("#"),
+    /** Up to 3 "what you'll learn" bullets. */
+    learn: z.array(z.string()).default([]),
+    /** Editorial cover label (used when no cover image). */
+    coverLabel: z.string(),
+    cover: z.string().optional(),
+    order: z.number().default(99),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, projects, products };

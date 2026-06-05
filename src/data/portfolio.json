@@ -1,0 +1,43 @@
+{
+  "eyebrow": "Portfolio",
+  "title": "Selected work",
+  "subtitle": "A calm grid of my strongest tech and AI work — the briefs, what I made, and the numbers they actually moved.",
+  "stats": [
+    { "value": "2.4M", "label": "Total views" },
+    { "value": "4.3K", "label": "Subscribers" },
+    { "value": "18", "label": "Brand collabs" },
+    { "value": "61%", "label": "Avg. retention" }
+  ],
+  "projects": [
+    {
+      "href": "/projects/hermes-agent",
+      "category": "AI",
+      "title": "Hermes Agent: full setup walkthrough",
+      "excerpt": "Step-by-step build of an autonomous agent for a dev-tools sponsor — costs and limits shown on screen, not hidden.",
+      "metric": "128k views in 30 days"
+    },
+    {
+      "href": "/blog/honest-headphone-review-two-weeks",
+      "category": "Review",
+      "title": "The honest headphone review",
+      "excerpt": "A two-week long-term review for an audio brand that asked for the real verdict — and got it.",
+      "metric": "+1,900 subscribers"
+    },
+    {
+      "href": "/projects/market-research-agent",
+      "category": "AI",
+      "title": "Stock & crypto research agent",
+      "excerpt": "Wiring live market data into an AI workflow for a fintech launch — including where it breaks and why.",
+      "metric": "9.2% avg retention lift"
+    },
+    {
+      "href": "/blog/local-ai-on-cheap-hardware",
+      "category": "Gadgets",
+      "title": "Local AI on cheap hardware",
+      "excerpt": "A hardware-sponsored deep dive into running models locally — benchmarks, heat, and the honest cost.",
+      "metric": "92k views · 6.1% CTR"
+    }
+  ],
+  "viewMoreLabel": "View more videos",
+  "viewMoreHref": "https://www.youtube.com/@techsober"
+}

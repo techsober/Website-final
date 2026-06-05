@@ -6,12 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "node scripts/build.mjs",
     "build:nofind": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "tina:dev": "tinacms dev -c \"astro dev\"",
-    "tina:build": "tinacms build && astro build && pagefind --site dist"
+    "tina:dev": "tinacms dev -c \"astro dev\""
   },
   "dependencies": {
     "@astrojs/mdx": "^4.2.4",

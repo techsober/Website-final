@@ -11,52 +11,11 @@ import Stat from "@components/Stat.astro";
 import Button from "@components/Button.astro";
 import BrandEnquiry from "@components/BrandEnquiry.astro";
 import Icon from "@components/Icon.astro";
-import { SOCIALS } from "@lib/site";
+// Editable in TinaCMS → "Portfolio page". Each <Stat> stays a swappable
+// component so numbers can later be fed by the YouTube Data API.
+import portfolio from "@data/portfolio.json";
 
-// PLACEHOLDER stats — swap for your real, strongest numbers. Each <Stat> is a
-// swappable component so these can later become live YouTube Data API counts.
-const stats = [
-  { value: "2.4M", label: "Total views" },
-  { value: "4.3K", label: "Subscribers" },
-  { value: "18", label: "Brand collabs" },
-  { value: "61%", label: "Avg. retention" },
-];
-
-// 3–5 best projects. Result pill = the metric that matters (gold).
-const projects = [
-  {
-    href: "/projects/hermes-agent",
-    category: "AI",
-    title: "Hermes Agent: full setup walkthrough",
-    excerpt:
-      "Step-by-step build of an autonomous agent for a dev-tools sponsor — costs and limits shown on screen, not hidden.",
-    metric: "128k views in 30 days",
-  },
-  {
-    href: "/blog/honest-headphone-review-two-weeks",
-    category: "Review",
-    title: "The honest headphone review",
-    excerpt:
-      "A two-week long-term review for an audio brand that asked for the real verdict — and got it.",
-    metric: "+1,900 subscribers",
-  },
-  {
-    href: "/projects/market-research-agent",
-    category: "AI",
-    title: "Stock & crypto research agent",
-    excerpt:
-      "Wiring live market data into an AI workflow for a fintech launch — including where it breaks and why.",
-    metric: "9.2% avg retention lift",
-  },
-  {
-    href: "/blog/local-ai-on-cheap-hardware",
-    category: "Gadgets",
-    title: "Local AI on cheap hardware",
-    excerpt:
-      "A hardware-sponsored deep dive into running models locally — benchmarks, heat, and the honest cost.",
-    metric: "92k views · 6.1% CTR",
-  },
-];
+const { stats, projects } = portfolio;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -75,12 +34,9 @@ const jsonLd = {
   {/* HEADER */}
   <div class="page-head">
     <div class="container">
-      <Eyebrow>Portfolio</Eyebrow>
-      <h1>Selected work</h1>
-      <p class="sub">
-        A calm grid of my strongest tech and AI work — the briefs, what I made,
-        and the numbers they actually moved.
-      </p>
+      <Eyebrow>{portfolio.eyebrow}</Eyebrow>
+      <h1>{portfolio.title}</h1>
+      <p class="sub">{portfolio.subtitle}</p>
     </div>
   </div>
 
@@ -116,8 +72,12 @@ const jsonLd = {
 
       {/* VIEW MORE */}
       <div class="center-cta">
-        <Button variant="primary" href={SOCIALS.youtube} external>
-          <Icon name="youtube" width={18} height={18} /> View more videos
+        <Button
+          variant="primary"
+          href={portfolio.viewMoreHref}
+          external={portfolio.viewMoreHref.startsWith("http")}
+        >
+          <Icon name="youtube" width={18} height={18} /> {portfolio.viewMoreLabel}
         </Button>
       </div>
     </div>
