@@ -1,0 +1,159 @@
+---
+/**
+ * ProjectPage — dedicated landing template for /projects/[slug].
+ * Hero (Launch + Watch CTAs) → "What it does" features → how-to / screenshot
+ * slot (markdown body) → gold honesty box (costs/limits) → repeat CTA.
+ * Text-light and demo-forward, per the wireframe.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Eyebrow from "@components/Eyebrow.astro";
+import Button from "@components/Button.astro";
+import Icon from "@components/Icon.astro";
+import SectionHead from "@components/SectionHead.astro";
+import { SITE } from "@lib/site";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">["data"];
+  slug: string;
+}
+
+const { project, slug } = Astro.props;
+const launch = project.launchUrl;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: project.title,
+  description: project.description,
+  applicationCategory: "WebApplication",
+  operatingSystem: "Any",
+  url: new URL(`/projects/${slug}`, SITE.url).href,
+  author: { "@type": "Person", name: SITE.author },
+  ...(launch ? { downloadUrl: launch } : {}),
+};
+---
+
+<BaseLayout
+  title={`${project.title} — TechSober Projects`}
+  description={project.description}
+  jsonLd={jsonLd}
+>
+  {/* HERO */}
+  <div class="page-head">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="/projects">Projects</a><span class="sep">/</span>
+        <span>{project.title}</span>
+      </div>
+      <Eyebrow>{project.category}</Eyebrow>
+      <h1>{project.title}</h1>
+      <p class="sub">{project.tagline ?? project.description}</p>
+      <div
+        class="actions"
+        style="margin-top:28px;display:flex;gap:14px;flex-wrap:wrap;align-items:center"
+      >
+        {
+          launch && (
+            <Button variant="primary" href={launch} external>
+              <Icon name="rocket" width={18} height={18} /> Launch app
+            </Button>
+          )
+        }
+        {
+          project.buildUrl && (
+            <Button variant="secondary" href={project.buildUrl} external>
+              <Icon name="play" width={16} height={16} /> Watch the build
+            </Button>
+          )
+        }
+        {project.status && <span class="status-note">{project.status}</span>}
+      </div>
+      {
+        project.tech.length > 0 && (
+          <div class="tags" style="margin-top:22px">
+            {project.tech.map((t) => (
+              <span class="tag">{t}</span>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  {/* WHAT IT DOES */}
+  {
+    project.features.length > 0 && (
+      <section>
+        <div class="container">
+          <SectionHead
+            class="reveal"
+            eyebrow="What it does"
+            title="The useful parts, plainly"
+          />
+          <div class="feature-grid">
+            {project.features.map((f) => (
+              <div class="feature reveal">
+                <div class="ico">
+                  <Icon name={f.icon as any} width={22} height={22} />
+                </div>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {/* HOW-TO + SCREENSHOT SLOT (markdown body) */}
+  <div class="blogband">
+    <section>
+      <div class="container">
+        <div class="prose reveal">
+          {/* Screenshot / demo GIF slot — drop a real asset in when ready. */}
+          <figure>
+            <div
+              style="aspect-ratio:16/9;border-radius:var(--r-card);background:linear-gradient(135deg,var(--off),var(--lav-100));border:1px solid var(--slate-300);display:flex;align-items:center;justify-content:center;color:var(--slate-500);font-size:14px;letter-spacing:.04em;text-transform:uppercase"
+            >
+              Screenshot / demo GIF
+            </div>
+            <figcaption>A short walkthrough of {project.title} in action.</figcaption>
+          </figure>
+          <slot />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  {/* HONESTY BOX + REPEAT CTA */}
+  <section>
+    <div class="container" style="max-width:760px">
+      {
+        project.honesty.length > 0 && (
+          <div class="honesty reveal">
+            <h3>
+              <Icon name="warning" width={20} height={20} stroke={2} /> The
+              honest bit — costs &amp; limits
+            </h3>
+            <ul>
+              {project.honesty.map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      {
+        launch && (
+          <div class="center-cta">
+            <Button variant="primary" href={launch} external>
+              Launch {project.title} <Icon name="arrow" width={16} height={16} stroke={2} />
+            </Button>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

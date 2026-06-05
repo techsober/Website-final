@@ -1,0 +1,45 @@
+---
+/**
+ * Giscus — GitHub Discussions comments for blog posts. Config comes from env
+ * (PUBLIC_GISCUS_*). When unconfigured, renders nothing in production and a
+ * small dev note, so the site builds without it.
+ */
+import { FLAGS, GISCUS } from "@lib/site";
+const enabled = FLAGS.giscus;
+const isDev = import.meta.env.DEV;
+---
+
+{
+  enabled ? (
+    <section
+      class="comments"
+      aria-label="Comments"
+      style="max-width:680px;margin:0 auto;padding-top:8px"
+    >
+      <h2 style="font-size:22px;margin-bottom:20px">Comments</h2>
+      <script
+        src="https://giscus.app/client.js"
+        data-repo={GISCUS.repo}
+        data-repo-id={GISCUS.repoId}
+        data-category={GISCUS.category}
+        data-category-id={GISCUS.categoryId}
+        data-mapping="pathname"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="en"
+        crossorigin="anonymous"
+        async
+      />
+    </section>
+  ) : isDev ? (
+    <section
+      style="max-width:680px;margin:0 auto;padding:18px 20px;border:1px dashed var(--slate-300);border-radius:var(--r-card);color:var(--slate-500);font-size:14px"
+    >
+      💬 Comments load here once Giscus is configured (set the PUBLIC_GISCUS_*
+      env vars).
+    </section>
+  ) : null
+}

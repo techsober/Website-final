@@ -1,0 +1,19 @@
+---
+/**
+ * Stat — a single headline number + label for the stat strips
+ * (Portfolio, About). Kept as a tiny swappable component so static
+ * placeholders can later be fed by the YouTube Data API without any
+ * layout change (per the wireframe's future-API note).
+ */
+interface Props {
+  value: string;
+  label: string;
+  class?: string;
+}
+const { value, label, class: className = "" } = Astro.props;
+---
+
+<div class={`stat ${className}`.trim()}>
+  <div class="num">{value}</div>
+  <div class="label">{label}</div>
+</div>

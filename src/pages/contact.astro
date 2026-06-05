@@ -1,0 +1,46 @@
+---
+/**
+ * Contact — standalone page built around the reusable BrandEnquiry block.
+ * The header CTA and footer mini-CTA both point here.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Eyebrow from "@components/Eyebrow.astro";
+import BrandEnquiry from "@components/BrandEnquiry.astro";
+import { SITE } from "@lib/site";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact TechSober",
+  description:
+    "Get in touch with TechSober about brand collaborations, sponsorships and honest product reviews.",
+  url: new URL("/contact", SITE.url).href,
+};
+---
+
+<BaseLayout
+  title="Contact — Work with TechSober"
+  description="Get in touch with TechSober about brand collaborations, sponsorships and honest product reviews. Replies within two working days."
+  jsonLd={jsonLd}
+>
+  {/* HEADER */}
+  <div class="page-head" style="padding-bottom:8px">
+    <div class="container">
+      <Eyebrow>Contact</Eyebrow>
+      <h1>Let's talk</h1>
+      <p class="sub">
+        Brand collaboration, sponsorship, or just a question? Tell me a little
+        about it and I'll come back within two working days.
+      </p>
+    </div>
+  </div>
+
+  {/* ENQUIRY FORM (reusable block) */}
+  <BrandEnquiry
+    bare
+    eyebrow="Send an enquiry"
+    title="Got a product worth an honest look?"
+  />
+
+  <div style="padding-bottom:48px"></div>
+</BaseLayout>

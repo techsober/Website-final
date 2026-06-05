@@ -1,0 +1,48 @@
+---
+/**
+ * /blog — page 1 of the post archive (6 per page). Pages 2+ live at
+ * /blog/[page]; category routes at /blog/category/[cat]. Real URLs throughout.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import BlogArchive from "@components/BlogArchive.astro";
+import YouTubeRail from "@components/YouTubeRail.astro";
+import { getPublishedPosts } from "@lib/content";
+import { SITE } from "@lib/site";
+
+const PAGE_SIZE = 6;
+const all = await getPublishedPosts();
+const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+const posts = all.slice(0, PAGE_SIZE);
+
+const heading = "Honest tech & AI, no fluff";
+const sub =
+  "Reviews, AI guides and explainers — written to be useful first and found second. The costs and limits stay in.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "TechSober Blog",
+  description: sub,
+  url: new URL("/blog", SITE.url).href,
+  author: { "@type": "Person", name: SITE.author },
+};
+---
+
+<BaseLayout
+  title="Blog — Honest tech & AI, no fluff"
+  description="Honest, hype-free tech and AI writing from TechSober — reviews, AI guides and explainers with the costs and limits left in."
+  jsonLd={jsonLd}
+>
+  <BlogArchive
+    posts={posts}
+    heading={heading}
+    sub={sub}
+    activeCat="all"
+    currentPage={1}
+    totalPages={totalPages}
+    basePath="/blog"
+  />
+
+  {/* Future-ready "Latest from YouTube" slot — renders only when keys exist. */}
+  <YouTubeRail />
+</BaseLayout>

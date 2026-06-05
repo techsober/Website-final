@@ -1,0 +1,63 @@
+---
+/**
+ * Pagination — numbered pages + prev/next with real, crawlable URLs
+ * (page 1 = basePath, page N = basePath/N). Not infinite scroll.
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath?: string;
+}
+const { currentPage, totalPages, basePath = "/blog" } = Astro.props;
+
+const url = (n: number) => (n <= 1 ? basePath : `${basePath}/${n}`);
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+const hasPrev = currentPage > 1;
+const hasNext = currentPage < totalPages;
+---
+
+{
+  totalPages > 1 && (
+    <nav class="pagination" aria-label="Pagination">
+      {hasPrev ? (
+        <a href={url(currentPage - 1)} rel="prev" aria-label="Previous page">
+          <Icon name="arrow" width={16} height={16} stroke={2} class="flip" />
+        </a>
+      ) : (
+        <span class="disabled" aria-hidden="true">
+          <Icon name="arrow" width={16} height={16} stroke={2} class="flip" />
+        </span>
+      )}
+
+      {pages.map((n) =>
+        n === currentPage ? (
+          <span class="current" aria-current="page">
+            {n}
+          </span>
+        ) : (
+          <a href={url(n)} aria-label={`Page ${n}`}>
+            {n}
+          </a>
+        ),
+      )}
+
+      {hasNext ? (
+        <a href={url(currentPage + 1)} rel="next" aria-label="Next page">
+          <Icon name="arrow" width={16} height={16} stroke={2} />
+        </a>
+      ) : (
+        <span class="disabled" aria-hidden="true">
+          <Icon name="arrow" width={16} height={16} stroke={2} />
+        </span>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .flip {
+    transform: rotate(180deg);
+  }
+</style>

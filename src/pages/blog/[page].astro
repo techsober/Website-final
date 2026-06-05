@@ -1,0 +1,53 @@
+---
+/**
+ * /blog/[page] — pagination pages 2..N (page 1 is /blog). Real, crawlable URLs.
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import BlogArchive from "@components/BlogArchive.astro";
+import { getPublishedPosts, type Post } from "@lib/content";
+
+const PAGE_SIZE = 6;
+
+export async function getStaticPaths() {
+  const all = await getPublishedPosts();
+  const totalPages = Math.max(1, Math.ceil(all.length / 6));
+  const paths = [];
+  for (let p = 2; p <= totalPages; p++) {
+    paths.push({
+      params: { page: String(p) },
+      props: {
+        page: p,
+        totalPages,
+        posts: all.slice((p - 1) * 6, p * 6),
+      },
+    });
+  }
+  return paths;
+}
+
+interface Props {
+  page: number;
+  totalPages: number;
+  posts: Post[];
+}
+const { page, totalPages, posts } = Astro.props;
+
+const heading = "Honest tech & AI, no fluff";
+const sub =
+  "Reviews, AI guides and explainers — written to be useful first and found second. The costs and limits stay in.";
+---
+
+<BaseLayout
+  title={`Blog — page ${page}`}
+  description="Honest, hype-free tech and AI writing from TechSober — reviews, AI guides and explainers with the costs and limits left in."
+>
+  <BlogArchive
+    posts={posts}
+    heading={heading}
+    sub={sub}
+    activeCat="all"
+    currentPage={page}
+    totalPages={totalPages}
+    basePath="/blog"
+  />
+</BaseLayout>
