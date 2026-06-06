@@ -1,0 +1,2 @@
+# Keeps the media folder in git so TinaCloud has a media root to sync.
+# Cover images uploaded via TinaCMS land here (public/uploads).
