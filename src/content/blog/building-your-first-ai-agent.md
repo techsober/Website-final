@@ -5,7 +5,7 @@ category: AI
 date: 2026-04-10T00:00:00.000Z
 cover: '/uploads/ChatGPT Image Jun 6, 2026, 08_29_21 PM.png'
 coverAlt: Smartphone are dying and AI agents are taking over
-author: Ashwin Chettiar
+author: Ashwin
 draft: false
 ---
 
