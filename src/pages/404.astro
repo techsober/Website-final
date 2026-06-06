@@ -1,0 +1,25 @@
+---
+/** 404 — branded not-found page (also makes missing routes obvious). */
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Eyebrow from "@components/Eyebrow.astro";
+import Button from "@components/Button.astro";
+---
+
+<BaseLayout title="Page not found — TechSober" noindex>
+  <div class="page-head" style="padding-bottom:72px">
+    <div class="container" style="text-align:center">
+      <Eyebrow>404</Eyebrow>
+      <h1 style="margin-top:14px">This page wandered off.</h1>
+      <p class="sub" style="margin-left:auto;margin-right:auto">
+        The page you're after doesn't exist (or moved). Let's get you back on
+        track.
+      </p>
+      <div
+        style="margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap"
+      >
+        <Button variant="primary" href="/">Back home</Button>
+        <Button variant="secondary" href="/blog">Read the blog</Button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

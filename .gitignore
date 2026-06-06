@@ -9,6 +9,7 @@ node_modules/
 .astro/
 tina/__generated__/
 public/pagefind/
+public/admin/
 
 # env
 .env

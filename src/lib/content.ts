@@ -7,6 +7,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 export type Post = CollectionEntry<"blog">;
 export type Project = CollectionEntry<"projects">;
+export type Product = CollectionEntry<"products">;
 
 const showDrafts = import.meta.env.DEV;
 
@@ -35,6 +36,34 @@ export async function getProjects(): Promise<Project[]> {
     (a, b) =>
       a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
   );
+}
+
+/** All non-draft products, by `order` then title. */
+export async function getProducts(): Promise<Product[]> {
+  const products = await getCollection("products", ({ data }) =>
+    showDrafts ? true : data.draft !== true,
+  );
+  return products.sort(
+    (a, b) =>
+      a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+  );
+}
+
+const CURRENCY_SYMBOL: Record<string, string> = {
+  GBP: "£",
+  USD: "$",
+  EUR: "€",
+};
+
+/** "Free" for free items, else the priced amount (e.g. "£12"). */
+export function formatPrice(p: {
+  free?: boolean;
+  price?: number;
+  currency?: string;
+}): string {
+  if (p.free || !p.price) return "Free";
+  const symbol = CURRENCY_SYMBOL[p.currency ?? "GBP"] ?? "";
+  return `${symbol}${p.price}`;
 }
 
 /** Estimate reading time in whole minutes (~225 wpm). */

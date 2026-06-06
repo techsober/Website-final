@@ -17,71 +17,12 @@ import {
   getPublishedPosts,
   formatDate,
   readingTime,
-  slugifyCategory,
 } from "@lib/content";
+// Editable in TinaCMS → "Homepage". Strings preserved 1:1 with the mock.
+import home from "@data/home.json";
 
 const posts = (await getPublishedPosts()).slice(0, 3);
-
-// Button-nav cards (2×2).
-const navCards = [
-  {
-    href: SOCIALS.youtube,
-    icon: "youtube",
-    title: "YouTube Content",
-    desc: "Long-form reviews, AI breakdowns and tutorials.",
-    arr: "Browse videos →",
-    external: true,
-  },
-  {
-    href: "/projects",
-    icon: "ai",
-    title: "AI Projects",
-    desc: "Working tools and agents you can open and try.",
-    arr: "Open the apps →",
-  },
-  {
-    href: "/blog",
-    icon: "doc",
-    title: "Blog",
-    desc: "Guides and honest takes, written to be found.",
-    arr: "Read posts →",
-  },
-  {
-    href: "/contact",
-    icon: "mail",
-    title: "Get in Touch",
-    desc: "Brand collabs and sponsorships — let's talk.",
-    arr: "Start a chat →",
-  },
-];
-
-// Featured work — curated, with internal links to the real project/post pages.
-const featured = [
-  {
-    href: "/projects/hermes-agent",
-    category: "AI",
-    title: "Hermes Agent: full setup walkthrough",
-    excerpt:
-      "Step-by-step build of an autonomous agent, costs and limits included.",
-    metric: "128k views in 30 days",
-  },
-  {
-    href: "/blog/honest-headphone-review-two-weeks",
-    category: "Review",
-    title: "The honest headphone review",
-    excerpt:
-      "What the spec sheet won't tell you after two weeks of real use.",
-    metric: "+1,900 subscribers",
-  },
-  {
-    href: "/projects/market-research-agent",
-    category: "AI",
-    title: "Stock & crypto research agent",
-    excerpt:
-      "Wiring live market data into an AI workflow — and where it breaks.",
-    metric: "9.2% avg retention lift",
-  },
-];
+const { hero, navCards, featuredHeading, featured, blogHeading } = home;
 
 const blogThumb =
   "background:linear-gradient(135deg,var(--off),#EBE1F8)";
@@ -114,21 +55,29 @@ const jsonLd = [
   {/* HERO */}
   <div class="hero">
     <div class="container">
-      <span class="eyebrow fu d1">Honest tech &amp; AI</span>
-      <h1 class="fu d2">Tech and AI,<br /><em>minus the hype.</em></h1>
-      <p class="sub fu d3">
-        Reviews, AI tools and real workflows — with the costs, limits and
-        marketing spin that other channels quietly skip.
-      </p>
+      <span class="eyebrow fu d1">{hero.eyebrow}</span>
+      <h1 class="fu d2">{hero.titleLine1}<br /><em>{hero.titleEm}</em></h1>
+      <p class="sub fu d3">{hero.subtitle}</p>
       <div class="actions fu d4">
-        <Button variant="primary" href={SOCIALS.youtube} external
-          >▶ Watch on YouTube</Button
+        <Button
+          variant="primary"
+          href={hero.primaryHref}
+          external={hero.primaryHref.startsWith("http")}
+          >{hero.primaryLabel}</Button
         >
-        <Button variant="secondary" href="/projects">See AI projects</Button>
+        <Button variant="secondary" href={hero.secondaryHref}
+          >{hero.secondaryLabel}</Button
+        >
       </div>
       <div class="trust fu d5">
-        <b>4,300+</b> subscribers <span class="sep"></span> Honest reviews
-        <span class="sep"></span> AI workflows that actually work
+        <b>{hero.trustStat}</b> {hero.trustStatSuffix}
+        {
+          hero.trustItems.map((item) => (
+            <>
+              <span class="sep" /> {item}
+            </>
+          ))
+        }
       </div>
     </div>
   </div>
@@ -138,22 +87,25 @@ const jsonLd = [
     <div class="container">
       <div class="nav-grid">
         {
-          navCards.map((c) => (
-            <a
-              href={c.href}
-              class="nav-card reveal"
-              {...(c.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              <div class="ico">
-                <Icon name={c.icon} width={22} height={22} />
-              </div>
-              <h4>{c.title}</h4>
-              <p>{c.desc}</p>
-              <span class="arr">{c.arr}</span>
-            </a>
-          ))
+          navCards.map((c) => {
+            const external = c.href.startsWith("http");
+            return (
+              <a
+                href={c.href}
+                class="nav-card reveal"
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                <div class="ico">
+                  <Icon name={c.icon as any} width={22} height={22} />
+                </div>
+                <h4>{c.title}</h4>
+                <p>{c.desc}</p>
+                <span class="arr">{c.arr}</span>
+              </a>
+            );
+          })
         }
       </div>
     </div>
@@ -164,10 +116,10 @@ const jsonLd = [
     <div class="container">
       <SectionHead
         class="reveal"
-        eyebrow="Featured work"
-        title="Recent work that landed"
-        linkHref="/portfolio"
-        linkLabel="View portfolio"
+        eyebrow={featuredHeading.eyebrow}
+        title={featuredHeading.title}
+        linkHref={featuredHeading.linkHref}
+        linkLabel={featuredHeading.linkLabel}
       />
       <div class="grid-3">
         {
@@ -195,10 +147,10 @@ const jsonLd = [
       <div class="container">
         <SectionHead
           class="reveal"
-          eyebrow="From the blog"
-          title="Reading, no fluff"
-          linkHref="/blog"
-          linkLabel="All posts"
+          eyebrow={blogHeading.eyebrow}
+          title={blogHeading.title}
+          linkHref={blogHeading.linkHref}
+          linkLabel={blogHeading.linkLabel}
         />
         <div class="grid-3">
           {

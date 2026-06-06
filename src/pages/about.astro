@@ -11,40 +11,13 @@ import Icon from "@components/Icon.astro";
 import Stat from "@components/Stat.astro";
 import BrandEnquiry from "@components/BrandEnquiry.astro";
 import { SITE, SOCIALS } from "@lib/site";
+// Editable in TinaCMS → "About page".
+import about from "@data/about.json";
 
-// Optional portrait. Drop a real image at /images/ashwin-chettiar.jpg and set
-// this to that path; until then a branded monogram placeholder renders.
-const portrait: string | undefined = undefined;
-
-const pillars = [
-  {
-    icon: "ai",
-    title: "AI tools & workflows",
-    body: "Agents and automations you can actually open and use.",
-  },
-  {
-    icon: "headphones",
-    title: "Gadget & headphone reviews",
-    body: "Long-term verdicts after the honeymoon wears off.",
-  },
-  {
-    icon: "graduate",
-    title: "Short-form education",
-    body: "Complex tech explained in plain, honest language.",
-  },
-  {
-    icon: "gear",
-    title: "Automation tutorials",
-    body: "Step-by-step builds with the costs left in.",
-  },
-];
-
-const stats = [
-  { value: "4.3K", label: "Subscribers" },
-  { value: "2.4M", label: "Total views" },
-  { value: "120+", label: "Videos published" },
-  { value: "2021", label: "Creating since" },
-];
+const { pillars, stats } = about;
+// Optional portrait. Add one in TinaCMS (or drop a path here) to replace the
+// branded monogram placeholder.
+const portrait: string | undefined = about.portrait || undefined;
 
 const jsonLd = [
   {
@@ -80,33 +53,35 @@ const jsonLd = [
         class="about-hero"
       >
         <div>
-          <Eyebrow>About</Eyebrow>
-          <h1 style="margin-top:14px">Ashwin Chettiar</h1>
-          <p class="sub">
-            I'm Ashwin Chettiar, the founder of TechSober. I cover tech and AI
-            the way I wish someone had covered it for me — honestly, with the
-            costs, limits and marketing spin left firmly in.
-          </p>
+          <Eyebrow>{about.eyebrow}</Eyebrow>
+          <h1 style="margin-top:14px">{about.title}</h1>
+          <p class="sub">{about.intro}</p>
           <div
             style="margin-top:28px;display:flex;gap:14px;flex-wrap:wrap"
           >
-            <Button variant="primary" href={SOCIALS.youtube} external>
-              <Icon name="youtube" width={18} height={18} /> Watch on YouTube
+            <Button
+              variant="primary"
+              href={about.primaryHref}
+              external={about.primaryHref.startsWith("http")}
+            >
+              <Icon name="youtube" width={18} height={18} /> {about.primaryLabel}
             </Button>
-            <Button variant="secondary" href="/blog">Read the blog</Button>
+            <Button variant="secondary" href={about.secondaryHref}
+              >{about.secondaryLabel}</Button
+            >
           </div>
         </div>
         <div
           class="portrait"
           role="img"
-          aria-label="Ashwin Chettiar, founder of TechSober"
+          aria-label={`${about.title}, founder of TechSober`}
           style="aspect-ratio:1/1;max-width:360px;width:100%;margin-left:auto;border-radius:var(--r-card);background:linear-gradient(135deg,var(--lav-100),#e7dcf5);border:1px solid var(--slate-300);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden"
         >
           {
             portrait ? (
               <img
                 src={portrait}
-                alt="Ashwin Chettiar, founder of TechSober"
+                alt={`${about.title}, founder of TechSober`}
                 width={360}
                 height={360}
                 style="width:100%;height:100%;object-fit:cover"
@@ -131,36 +106,10 @@ const jsonLd = [
     <section>
       <div class="container">
         <div class="prose">
-          <h2>Why TechSober exists</h2>
-          <p>
-            TechSober started with a simple frustration: almost everything in
-            tech is sold to you twice — once by the company, then again by the
-            reviewer paid to be excited. The hype machine is loud, and it
-            rarely mentions what a thing costs you in money, time or sanity.
-          </p>
-          <p>
-            So I built the channel I wanted to watch. No breathless launch-day
-            verdicts. No spec sheets dressed up as opinions. Just tech and AI
-            covered after the novelty fades — when the real strengths and the
-            quiet compromises actually show up.
-          </p>
-          <blockquote class="pullquote">
-            The goal isn't to be negative. It's to be honest enough that you can
-            make your own call.
-          </blockquote>
-          <p>
-            That honesty is the whole brand. When I build an AI tool, I show you
-            the bill and where it breaks. When I review a gadget, I live with it
-            for weeks first. When something's genuinely great, I'll say so — and
-            you'll believe me, because I told you the truth about the last ten
-            things.
-          </p>
-          <p>
-            TechSober is independent and small on purpose. That keeps the
-            incentives clean: I answer to the people watching, not to whoever
-            shipped the press unit. If that sounds like the kind of tech
-            coverage you've been missing, you're in the right place.
-          </p>
+          <h2>{about.storyHeading}</h2>
+          {about.storyBefore.map((p) => <p>{p}</p>)}
+          <blockquote class="pullquote">{about.pullquote}</blockquote>
+          {about.storyAfter.map((p) => <p>{p}</p>)}
         </div>
       </div>
     </section>
@@ -170,9 +119,9 @@ const jsonLd = [
   <section>
     <div class="container">
       <div style="margin-bottom:44px">
-        <Eyebrow>What I do</Eyebrow>
+        <Eyebrow>{about.whatEyebrow}</Eyebrow>
         <h2 style="font-size:clamp(28px,4vw,38px);margin-top:10px">
-          Four things, done honestly
+          {about.pillarsHeading}
         </h2>
       </div>
       <div class="pillar-grid">
