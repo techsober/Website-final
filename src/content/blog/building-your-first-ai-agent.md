@@ -11,7 +11,7 @@ draft: false
 
 Honest answer: your first AI agent should do one small, boring thing reliably — not run your business. Strip away the demos and an agent is a language model in a loop, calling tools and checking its own work. The magic is real, but so is the failure rate, and planning for the failures is the whole job.
 
-|   |   |   |
+| 1 | 2 | 3 |
 | - | - | - |
 |   |   |   |
 |   |   |   |
