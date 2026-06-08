@@ -9,7 +9,23 @@ export type Post = CollectionEntry<"blog">;
 export type Project = CollectionEntry<"projects">;
 export type Product = CollectionEntry<"products">;
 
-const showDrafts = import.meta.env.DEV;
+/**
+ * Show drafts on the local dev server AND on Cloudflare preview branches
+ * (anything that isn't the production `main` branch), but never on the live
+ * site. This lets unpublished posts be previewed on the test site
+ * (dev.<project>.pages.dev) while staying hidden in production.
+ *
+ * Force it anywhere by setting PUBLIC_SHOW_DRAFTS="true".
+ */
+const PRODUCTION_BRANCH = "main";
+function computeShowDrafts(): boolean {
+  if (import.meta.env.DEV) return true;
+  if (import.meta.env.PUBLIC_SHOW_DRAFTS === "true") return true;
+  const branch =
+    (typeof process !== "undefined" && process.env?.CF_PAGES_BRANCH) || "";
+  return branch !== "" && branch !== PRODUCTION_BRANCH;
+}
+const showDrafts = computeShowDrafts();
 
 /** All non-draft blog posts, newest first. */
 export async function getPublishedPosts(): Promise<Post[]> {

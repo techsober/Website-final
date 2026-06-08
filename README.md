@@ -31,6 +31,35 @@ cp .env.example .env
 
 ---
 
+## Editing & test workflow (live site vs. test site)
+
+Two branches, each with its own URL — same project, two versions:
+
+| Branch | Purpose | URL |
+|---|---|---|
+| `main` | **Live site** (production) | `website-final-52i.pages.dev` (+ custom domain) |
+| `dev` | **Test site** (preview) | `dev.website-final-52i.pages.dev` |
+
+Cloudflare auto-builds a preview for every non-`main` branch, so the test site
+updates whenever `dev` changes.
+
+**Content (posts, page text, images, products) → TinaCMS:**
+- Edit at `/admin`, Save → commits to `main` → live in ~2 min.
+- Not ready? Toggle **Draft**. Draft posts are **hidden on the live site** but
+  **visible on the test site**, so you can preview them before publishing.
+
+**Code / design / features → the `dev` branch:**
+1. Changes are pushed to `dev`.
+2. Cloudflare builds `dev.website-final-52i.pages.dev`.
+3. Review there. When it's good, merge `dev → main` → live.
+
+Draft visibility is controlled in `src/lib/content.ts` (`computeShowDrafts`):
+drafts show on any branch except `main`, or set `PUBLIC_SHOW_DRAFTS="true"` to
+force them on. Edit content on the **live** `/admin` (TinaCloud indexes `main`);
+the test site is for viewing.
+
+---
+
 ## Project structure
 
 ```
