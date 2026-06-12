@@ -1,7 +1,7 @@
 {
   "eyebrow": "About",
   "title": "Ashwin Chettiar",
-  "intro": "I'm Ashwin Chettiar, the founder of TechSober. I cover tech and AI the way I wish someone had covered it for me — honestly, with the costs, limits and marketing spin left firmly in.",
+  "intro": "TechSober, founded by Ashwin Chettiar is a content creator covering tech, gadgets and AI automation. He also builds AI agents and automations that help businesses scale and is developing a braindump app to help people manage everyday chaos.\n",
   "primaryLabel": "Watch on YouTube",
   "primaryHref": "https://www.youtube.com/@techsober",
   "secondaryLabel": "Read the blog",
@@ -42,9 +42,21 @@
     }
   ],
   "stats": [
-    { "value": "4.3K", "label": "Subscribers" },
-    { "value": "2.4M", "label": "Total views" },
-    { "value": "120+", "label": "Videos published" },
-    { "value": "2021", "label": "Creating since" }
+    {
+      "value": "4.3K",
+      "label": "Subscribers"
+    },
+    {
+      "value": "2.4M",
+      "label": "Total views"
+    },
+    {
+      "value": "120+",
+      "label": "Videos published"
+    },
+    {
+      "value": "2021",
+      "label": "Creating since"
+    }
   ]
 }
