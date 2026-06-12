@@ -83,4 +83,37 @@ const products = defineCollection({
   }),
 });
 
-export const collections = { blog, projects, products };
+/**
+ * Singleton pages with a free-form rich-text body (e.g. About). Structured
+ * bits (hero, pillars, stats) live in frontmatter; the story is the markdown
+ * body so it's freely editable in TinaCMS.
+ */
+const pages = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/pages" }),
+  schema: z.object({
+    eyebrow: z.string(),
+    title: z.string(),
+    intro: z.string(),
+    primaryLabel: z.string(),
+    primaryHref: z.string(),
+    secondaryLabel: z.string(),
+    secondaryHref: z.string(),
+    portrait: z.string().optional(),
+    whatEyebrow: z.string(),
+    pillarsHeading: z.string(),
+    pillars: z
+      .array(
+        z.object({
+          icon: z.string().default("ai"),
+          title: z.string(),
+          body: z.string(),
+        }),
+      )
+      .default([]),
+    stats: z
+      .array(z.object({ value: z.string(), label: z.string() }))
+      .default([]),
+  }),
+});
+
+export const collections = { blog, projects, products, pages };

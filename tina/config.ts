@@ -284,11 +284,13 @@ export default defineConfig({
       },
 
       // ─────────────────────────── About (singleton) ────────────────────────
+      // The story is the markdown BODY (free-form rich text: headings, quotes,
+      // bullets, links…). Structured hero/pillars/stats stay as fields.
       {
         name: "about",
         label: "About page",
-        path: "src/data",
-        format: "json",
+        path: "src/content/pages",
+        format: "md",
         match: { include: "about" },
         ui: { allowedActions: { create: false, delete: false } },
         fields: [
@@ -300,22 +302,6 @@ export default defineConfig({
           { type: "string", name: "secondaryLabel", label: "Secondary button label" },
           { type: "string", name: "secondaryHref", label: "Secondary button URL" },
           { type: "image", name: "portrait", label: "Portrait image" },
-          { type: "string", name: "storyHeading", label: "Story heading" },
-          {
-            type: "string",
-            name: "storyBefore",
-            label: "Story paragraphs (before pull-quote)",
-            list: true,
-            ui: { component: "textarea" },
-          },
-          { type: "string", name: "pullquote", label: "Pull-quote", ui: { component: "textarea" } },
-          {
-            type: "string",
-            name: "storyAfter",
-            label: "Story paragraphs (after pull-quote)",
-            list: true,
-            ui: { component: "textarea" },
-          },
           { type: "string", name: "whatEyebrow", label: "Pillars eyebrow" },
           { type: "string", name: "pillarsHeading", label: "Pillars heading" },
           {
@@ -337,6 +323,12 @@ export default defineConfig({
             list: true,
             ui: { itemProps: (i: { label?: string }) => ({ label: i?.label }) },
             fields: [...statFields],
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Story (rich text — headings, quotes, bullets, links)",
+            isBody: true,
           },
         ],
       },

@@ -11,8 +11,14 @@ import Icon from "@components/Icon.astro";
 import Stat from "@components/Stat.astro";
 import BrandEnquiry from "@components/BrandEnquiry.astro";
 import { SITE, SOCIALS } from "@lib/site";
-// Editable in TinaCMS → "About page".
-import about from "@data/about.json";
+import { getEntry, render } from "astro:content";
+
+// Editable in TinaCMS → "About page". Structured bits are frontmatter; the
+// story is the markdown body (free-form rich text).
+const entry = await getEntry("pages", "about");
+if (!entry) throw new Error("Missing content: src/content/pages/about.md");
+const about = entry.data;
+const { Content } = await render(entry);
 
 const { pillars, stats } = about;
 // Optional portrait. Add one in TinaCMS (or drop a path here) to replace the
@@ -101,15 +107,12 @@ const jsonLd = [
     </div>
   </div>
 
-  {/* STORY */}
+  {/* STORY — free-form rich text from the markdown body (TinaCMS-editable) */}
   <div class="blogband">
     <section>
       <div class="container">
-        <div class="prose">
-          <h2>{about.storyHeading}</h2>
-          {about.storyBefore.map((p) => <p>{p}</p>)}
-          <blockquote class="pullquote">{about.pullquote}</blockquote>
-          {about.storyAfter.map((p) => <p>{p}</p>)}
+        <div class="prose about-story">
+          <Content />
         </div>
       </div>
     </section>

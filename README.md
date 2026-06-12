@@ -74,7 +74,8 @@ src/
   content/      blog/*.md · projects/*.md · products/*.md  (all TinaCMS-edited)
   styles/       tokens.css (design tokens) · global.css
   lib/          site.ts (config + flags) · content.ts · icons.ts · youtube.ts
-  data/         home.json · about.json · portfolio.json  (page content, TinaCMS)
+  data/         home.json · portfolio.json  (page content, TinaCMS)
+  content/pages/about.md  (About page: frontmatter + rich-text story body)
 functions/api/  contact.ts · subscribe.ts · stripe-webhook.ts · download.ts
 public/         robots.txt, favicon, og-default image
 tina/           config.ts (TinaCMS schema)
@@ -103,7 +104,7 @@ redeploy. The schema (`tina/config.ts`) covers:
 | **Projects** | project landing pages | `src/content/projects/*.md` |
 | **Resources / Products** | PDFs, prices, Payment Links | `src/content/products/*.md` |
 | **Homepage** | hero, nav cards, featured work, headings | `src/data/home.json` |
-| **About page** | story, pillars, stats | `src/data/about.json` |
+| **About page** | hero, pillars, stats + rich-text story | `src/content/pages/about.md` |
 | **Portfolio page** | stat strip, project cards | `src/data/portfolio.json` |
 
 **Local visual editing (no account required):**

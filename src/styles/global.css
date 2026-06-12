@@ -1259,6 +1259,12 @@ footer {
   color: inherit;
 }
 
+/* About story: markdown blockquotes render at pull-quote size. */
+.about-story blockquote {
+  font-size: 21px;
+  line-height: 1.5;
+}
+
 /* Pull-quote (About). */
 .pullquote {
   border-left: 3px solid var(--lav-300);
