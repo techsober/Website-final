@@ -3,7 +3,7 @@
  * drafts in production, estimate reading time, and format dates consistently
  * (UK style: "12 May 2026").
  */
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 
 export type Post = CollectionEntry<"blog">;
 export type Project = CollectionEntry<"projects">;
@@ -117,4 +117,28 @@ export async function getRelatedPosts(current: Post, n = 3): Promise<Post[]> {
   );
   const rest = others.filter((p) => p.data.category !== current.data.category);
   return [...sameCat, ...rest].slice(0, n);
+}
+
+/**
+ * Resolve manually-picked related posts (TinaCMS stores reference paths like
+ * `src/content/blog/foo.md`). Falls back to same-category auto-selection when
+ * none are set or none resolve. Drafts excluded in production.
+ */
+export async function resolveRelatedPosts(
+  refs: string[] | undefined,
+  current: Post,
+  n = 3,
+): Promise<Post[]> {
+  if (refs && refs.length) {
+    const slugs = refs.map(
+      (r) => r.split("/").pop()?.replace(/\.(md|mdx)$/i, "") ?? r,
+    );
+    const entries = await Promise.all(slugs.map((s) => getEntry("blog", s)));
+    const valid = entries.filter(
+      (e): e is Post =>
+        !!e && e.id !== current.id && (showDrafts || e.data.draft !== true),
+    );
+    if (valid.length) return valid.slice(0, n);
+  }
+  return getRelatedPosts(current, n);
 }

@@ -1336,6 +1336,46 @@ footer {
   line-height: 1.65;
 }
 
+/* Sources / citations (blog post). */
+.sources {
+  max-width: 720px;
+  margin: 0 auto;
+  border-top: 1px solid var(--slate-300);
+  padding-top: 24px;
+}
+.sources-title {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.sources ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sources li {
+  font-size: 15px;
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.5;
+}
+.sources li::before {
+  content: "↗";
+  position: absolute;
+  left: 0;
+  color: var(--lav-500);
+  font-weight: 700;
+}
+.sources a {
+  color: var(--lav-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+.sources a:hover {
+  color: var(--lav-400);
+}
+
 /* Author bio box (blog post, E-E-A-T). */
 .author-box {
   max-width: 720px;

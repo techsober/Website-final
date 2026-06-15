@@ -162,6 +162,44 @@ export default defineConfig({
             name: "canonicalUrl",
             label: "Canonical URL (only if this was first published elsewhere)",
           },
+          {
+            type: "string",
+            name: "excerpt",
+            label: "Excerpt (card + RSS summary — falls back to description)",
+            ui: { component: "textarea" },
+          },
+          {
+            type: "image",
+            name: "ogImage",
+            label: "Social share image (1200×630 — falls back to cover)",
+          },
+          {
+            type: "object",
+            name: "sources",
+            label: "Sources / citations (outbound links)",
+            list: true,
+            ui: {
+              itemProps: (item: { title?: string }) => ({
+                label: item?.title || "Source",
+              }),
+            },
+            fields: [
+              { type: "string", name: "title", label: "Title" },
+              { type: "string", name: "url", label: "URL" },
+            ],
+          },
+          {
+            type: "string",
+            name: "relatedPosts",
+            label:
+              "Related posts (enter slugs — the part after /blog/; overrides auto by category)",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "focusKeyword",
+            label: "Focus keyword (your reference only — not shown on the page)",
+          },
 
           { type: "rich-text", name: "body", label: "Body", isBody: true },
         ],

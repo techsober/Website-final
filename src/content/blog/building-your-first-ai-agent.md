@@ -14,6 +14,15 @@ tags:
   - LLM
   - n8n
 articleType: BlogPosting
+excerpt: An AI agent is just a model in a loop calling tools. Here's what to build first, where it breaks, and how to keep your first one from going off the rails.
+sources:
+  - title: 'Anthropic — Building effective agents'
+    url: 'https://www.anthropic.com/engineering/building-effective-agents'
+  - title: 'n8n documentation'
+    url: 'https://docs.n8n.io'
+relatedPosts:
+  - ollama-vs-lm-studio
+  - is-the-new-siri-google-in-disguise
 keyTakeaways:
   - An AI agent is just a language model in a loop calling tools — start with one small, reliable task.
   - About 80% of the work is error handling and limits, not clever prompts.

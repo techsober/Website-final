@@ -64,8 +64,8 @@ export const AUTHOR = {
   name: "Ashwin Chettiar",
   role: "Founder of TechSober",
   bio: "Ashwin Chettiar is the founder of TechSober, covering tech, gadgets and AI automation — and building AI agents and automations for businesses.",
-  /** Headshot under public/. Upload via TinaCMS Media Manager to this path. */
-  avatar: "/uploads/ashwin-chettiar.jpg",
+  /** Headshot under public/. Reuses the About portrait; swap anytime. */
+  avatar: "/uploads/CAF708A5-1DFF-4D4E-B65E-5C8AD81909C3.jpg",
   /** Author profile page on this site. */
   url: "/about",
   /** Feeds Person JSON-LD `sameAs`. */
