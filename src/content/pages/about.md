@@ -7,7 +7,7 @@ primaryLabel: Watch on YouTube
 primaryHref: 'https://www.youtube.com/@techsober'
 secondaryLabel: Read the blog
 secondaryHref: /blog
-portrait: ''
+portrait: /uploads/CAF708A5-1DFF-4D4E-B65E-5C8AD81909C3.jpg
 whatEyebrow: What I do
 pillarsHeading: At TechSober You Get
 pillars:
