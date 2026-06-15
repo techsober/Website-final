@@ -28,7 +28,7 @@ stats:
     label: Followers
   - value: 2.4M
     label: Total views
-  - value: 120+
+  - value: 500+
     label: Videos published
   - value: '2021'
     label: Creating since
