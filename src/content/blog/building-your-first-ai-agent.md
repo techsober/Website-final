@@ -1,21 +1,34 @@
 ---
 title: Build your first AI agent
+seoTitle: How to build your first AI agent (no hype)
 description: 'Agents aren''t magic — they''re a loop, some tools, and a lot of error handling. A grounded walkthrough of what to build first and where it''ll break.'
 category: AI
 date: 2026-04-10T00:00:00.000Z
+updatedDate: 2026-06-15T00:00:00.000Z
 cover: '/uploads/ChatGPT Image Jun 6, 2026, 08_29_21 PM.png'
 coverAlt: Smartphone are dying and AI agents are taking over
-author: Ashwin
+author: Ashwin Chettiar
+tags:
+  - AI agents
+  - automation
+  - LLM
+  - n8n
+articleType: BlogPosting
+keyTakeaways:
+  - An AI agent is just a language model in a loop calling tools — start with one small, reliable task.
+  - About 80% of the work is error handling and limits, not clever prompts.
+  - Never let a first agent spend money or act in production without review.
+faqs:
+  - question: What is an AI agent, in simple terms?
+    answer: A language model running in a loop that can call tools — search, a calculator, an API, your database — and check its own work until the task is done or a limit is hit.
+  - question: What should my first AI agent do?
+    answer: Something small, boring and useful — summarise unread emails, tidy a spreadsheet, or flag items in an RSS feed. Avoid anything that spends money or posts on your behalf.
+  - question: Why do AI agents fail?
+    answer: Usually unhandled tool errors, runaway loops that burn through tokens, and the model stating wrong answers with total confidence. Set hard limits and add a verification step.
 draft: false
 ---
 
 Honest answer: your first AI agent should do one small, boring thing reliably — not run your business. Strip away the demos and an agent is a language model in a loop, calling tools and checking its own work. The magic is real, but so is the failure rate, and planning for the failures is the whole job.
-
-| 1 | 2 | 3 |
-| - | - | - |
-|   |   |   |
-|   |   |   |
-|   |   |   |
 
 ## What an agent actually is
 

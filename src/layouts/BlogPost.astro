@@ -9,7 +9,7 @@ import Chip from "@components/Chip.astro";
 import Card from "@components/Card.astro";
 import Giscus from "@components/Giscus.astro";
 import Icon from "@components/Icon.astro";
-import { SITE } from "@lib/site";
+import { SITE, AUTHOR } from "@lib/site";
 import {
   getRelatedPosts,
   formatDate,
@@ -23,8 +23,21 @@ interface Props {
   post: Post;
 }
 const { post } = Astro.props;
-const { title, description, category, date, cover, coverAlt, author } =
-  post.data;
+const {
+  title,
+  description,
+  category,
+  date,
+  cover,
+  coverAlt,
+  seoTitle,
+  updatedDate,
+  canonicalUrl,
+  tags,
+  keyTakeaways,
+  faqs,
+  articleType,
+} = post.data;
 
 const minutes = readingTime(post.body, post.data.readingTime);
 const catSlug = slugifyCategory(category);
@@ -33,56 +46,78 @@ const pageUrl = new URL(`/blog/${post.id}`, SITE.url).href;
 const ogImage = cover ?? SITE.ogImage;
 const blogThumb = "background:linear-gradient(135deg,var(--off),#EBE1F8)";
 
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: title,
-    description,
-    datePublished: isoDate(date),
-    dateModified: isoDate(date),
-    author: {
-      "@type": "Person",
-      name: author,
-      url: new URL("/about", SITE.url).href,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      logo: {
-        "@type": "ImageObject",
-        url: new URL("/apple-touch-icon.png", SITE.url).href,
-      },
-    },
-    mainEntityOfPage: pageUrl,
-    image: new URL(ogImage, SITE.url).href,
-    articleSection: category,
+// SEO fallbacks
+const headTitle = seoTitle || title;
+const updated = updatedDate ?? date;
+const isUpdated = !!updatedDate && isoDate(updatedDate) !== isoDate(date);
+const catUrl = new URL(`/blog/category/${catSlug}`, SITE.url).href;
+
+// Article schema — @type is author-selectable (BlogPosting/NewsArticle/Review/HowTo)
+const articleLd: Record<string, any> = {
+  "@context": "https://schema.org",
+  "@type": articleType,
+  headline: title,
+  description,
+  datePublished: isoDate(date),
+  dateModified: isoDate(updated),
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    url: new URL(AUTHOR.url, SITE.url).href,
+    image: new URL(AUTHOR.avatar, SITE.url).href,
+    jobTitle: AUTHOR.role,
+    sameAs: AUTHOR.sameAs,
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: new URL("/blog", SITE.url).href,
-      },
-      { "@type": "ListItem", position: 3, name: title, item: pageUrl },
-    ],
+  publisher: {
+    "@type": "Organization",
+    name: SITE.name,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/apple-touch-icon.png", SITE.url).href,
+    },
   },
-];
+  mainEntityOfPage: canonicalUrl || pageUrl,
+  image: new URL(ogImage, SITE.url).href,
+  articleSection: category,
+  inLanguage: "en-GB",
+  ...(tags.length ? { keywords: tags.join(", ") } : {}),
+};
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+    { "@type": "ListItem", position: 2, name: "Blog", item: new URL("/blog", SITE.url).href },
+    { "@type": "ListItem", position: 3, name: category, item: catUrl },
+    { "@type": "ListItem", position: 4, name: title, item: pageUrl },
+  ],
+};
+
+const jsonLd: Record<string, any>[] = [articleLd, breadcrumbLd];
+if (faqs.length) {
+  jsonLd.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  });
+}
 ---
 
 <BaseLayout
-  title={title}
+  title={headTitle}
   description={description}
+  canonical={canonicalUrl}
   type="article"
   image={ogImage}
   publishedTime={date.toISOString()}
-  modifiedTime={date.toISOString()}
-  author={author}
+  modifiedTime={updated.toISOString()}
+  author={AUTHOR.name}
+  tags={tags}
   jsonLd={jsonLd}
 >
   <article>
@@ -101,9 +136,17 @@ const jsonLd = [
             class="meta"
             style="margin-top:18px;color:var(--slate-500);font-size:14.5px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"
           >
-            <span>By {author}</span>
+            <span>By {AUTHOR.name}</span>
             <span class="sep" style="width:4px;height:4px;border-radius:50%;background:var(--slate-300);display:inline-block"></span>
             <time datetime={isoDate(date)}>{formatDate(date)}</time>
+            {
+              isUpdated && (
+                <>
+                  <span class="sep" style="width:4px;height:4px;border-radius:50%;background:var(--slate-300);display:inline-block" />
+                  <span>Updated {formatDate(updated)}</span>
+                </>
+              )
+            }
             <span class="sep" style="width:4px;height:4px;border-radius:50%;background:var(--slate-300);display:inline-block"></span>
             <span>{minutes} min read</span>
           </div>
@@ -130,11 +173,92 @@ const jsonLd = [
       )
     }
 
+    {/* KEY TAKEAWAYS — answer-first (snippets + AI extraction) */}
+    {
+      keyTakeaways.length > 0 && (
+        <div class="container">
+          <aside
+            class="takeaways"
+            style="max-width:720px;margin:24px auto 0"
+            aria-label="Key takeaways"
+          >
+            <h2>Key takeaways</h2>
+            <ul>
+              {keyTakeaways.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+      )
+    }
+
     {/* BODY */}
-    <section style="padding-top:48px">
+    <section style="padding-top:40px">
       <div class="container">
         <div class="prose">
           <slot />
+        </div>
+      </div>
+    </section>
+
+    {/* FAQ — visible Q&A (matches FAQPage JSON-LD) */}
+    {
+      faqs.length > 0 && (
+        <section style="padding-top:8px">
+          <div class="container">
+            <div class="faq">
+              <h2 class="faq-title">Frequently asked questions</h2>
+              {faqs.map((f) => (
+                <div class="faq-item">
+                  <h3>{f.question}</h3>
+                  <p style="white-space:pre-line">{f.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {/* AUTHOR BIO — E-E-A-T */}
+    <section style="padding-top:48px">
+      <div class="container">
+        <div class="author-box">
+          <div class="author-avatar">
+            <img
+              src={AUTHOR.avatar}
+              alt={`${AUTHOR.name} — ${AUTHOR.role}`}
+              width="72"
+              height="72"
+              loading="lazy"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+            />
+            <span class="author-monogram" aria-hidden="true">AC</span>
+          </div>
+          <div class="author-meta">
+            <div class="author-name">{AUTHOR.name}</div>
+            <div class="author-role">{AUTHOR.role}</div>
+            <p class="author-bio">{AUTHOR.bio}</p>
+            <div class="author-links">
+              <a href={AUTHOR.url}>About</a>
+              {
+                AUTHOR.sameAs.map((u) => (
+                  <a href={u} target="_blank" rel="noopener noreferrer me">
+                    {u.includes("youtube")
+                      ? "YouTube"
+                      : u.includes("linkedin")
+                        ? "LinkedIn"
+                        : u.includes("instagram")
+                          ? "Instagram"
+                          : u.includes("tiktok")
+                            ? "TikTok"
+                            : "X"}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -24,6 +24,26 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     /** Optional explicit reading time; otherwise estimated from the body. */
     readingTime: z.number().optional(),
+
+    // --- SEO / GEO (all optional with fallbacks) ---
+    /** ≤60 chars, keyword-first. Falls back to `title` for <title>/og:title. */
+    seoTitle: z.string().optional(),
+    /** Freshness signal -> dateModified + "Last updated". Falls back to date. */
+    updatedDate: z.coerce.date().optional(),
+    /** Override canonical (only when republished elsewhere). */
+    canonicalUrl: z.string().optional(),
+    /** Keywords + article:tag + internal linking. */
+    tags: z.array(z.string()).default([]),
+    /** Answer-first "Key takeaways" box (wins snippets + AI extraction). */
+    keyTakeaways: z.array(z.string()).default([]),
+    /** Visible FAQ block + FAQPage JSON-LD (answers must match the page). */
+    faqs: z
+      .array(z.object({ question: z.string(), answer: z.string() }))
+      .default([]),
+    /** Selects the Article schema @type. */
+    articleType: z
+      .enum(["BlogPosting", "NewsArticle", "Review", "HowTo"])
+      .default("BlogPosting"),
   }),
 });
 

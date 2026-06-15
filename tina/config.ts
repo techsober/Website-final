@@ -102,10 +102,67 @@ export default defineConfig({
             options: ["AI", "Tech", "Review", "Gadgets"],
           },
           { type: "datetime", name: "date", label: "Publish date", required: true },
+          {
+            type: "datetime",
+            name: "updatedDate",
+            label: "Last updated (freshness signal — leave blank if unchanged)",
+          },
           { type: "image", name: "cover", label: "Cover image" },
           { type: "string", name: "coverAlt", label: "Cover alt text (accessibility)" },
           { type: "string", name: "author", label: "Author" },
           { type: "boolean", name: "draft", label: "Draft (hidden from the live site)" },
+
+          // --- Search & AI ranking (all optional; sensible fallbacks) ---
+          {
+            type: "string",
+            name: "seoTitle",
+            label: "SEO title (≤60 chars, keyword first — falls back to Title)",
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags / keywords",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "articleType",
+            label: "Article type (schema)",
+            options: ["BlogPosting", "NewsArticle", "Review", "HowTo"],
+          },
+          {
+            type: "string",
+            name: "keyTakeaways",
+            label: "Key takeaways (answer-first box at the top)",
+            list: true,
+            ui: { component: "textarea" },
+          },
+          {
+            type: "object",
+            name: "faqs",
+            label: "FAQ (shown on page + FAQ schema)",
+            list: true,
+            ui: {
+              itemProps: (item: { question?: string }) => ({
+                label: item?.question || "FAQ",
+              }),
+            },
+            fields: [
+              { type: "string", name: "question", label: "Question" },
+              {
+                type: "string",
+                name: "answer",
+                label: "Answer",
+                ui: { component: "textarea" },
+              },
+            ],
+          },
+          {
+            type: "string",
+            name: "canonicalUrl",
+            label: "Canonical URL (only if this was first published elsewhere)",
+          },
+
           { type: "rich-text", name: "body", label: "Body", isBody: true },
         ],
       },

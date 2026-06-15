@@ -52,6 +52,32 @@ export const SOCIAL_LIST = [
   { name: "X", href: SOCIALS.x, icon: "x" },
 ] as const;
 
+/** X/Twitter handle for twitter:site / twitter:creator meta tags. */
+export const TWITTER_HANDLE = "@techsober";
+
+/**
+ * Author identity (E-E-A-T): powers bylines, the author bio box, and the
+ * Person node in Article JSON-LD (sameAs links prove a real author entity).
+ * Hardcoded single author for now; promote to an authors collection later.
+ */
+export const AUTHOR = {
+  name: "Ashwin Chettiar",
+  role: "Founder of TechSober",
+  bio: "Ashwin Chettiar is the founder of TechSober, covering tech, gadgets and AI automation — and building AI agents and automations for businesses.",
+  /** Headshot under public/. Upload via TinaCMS Media Manager to this path. */
+  avatar: "/uploads/ashwin-chettiar.jpg",
+  /** Author profile page on this site. */
+  url: "/about",
+  /** Feeds Person JSON-LD `sameAs`. */
+  sameAs: [
+    SOCIALS.youtube,
+    SOCIALS.instagram,
+    SOCIALS.tiktok,
+    SOCIALS.x,
+    "https://www.linkedin.com/in/ashwinchettiar",
+  ],
+};
+
 /**
  * Feature flags driven by env presence. Public (PUBLIC_*) vars are readable in
  * client/SSG output; server-only secrets stay in the Pages Functions runtime.

@@ -4,7 +4,7 @@
  * Open Graph, Twitter card, robots, and optional JSON-LD structured data.
  * Lives inside BaseLayout's <head>.
  */
-import { SITE } from "@lib/site";
+import { SITE, TWITTER_HANDLE } from "@lib/site";
 
 interface Props {
   title?: string;
@@ -17,6 +17,8 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   author?: string;
+  /** Article tags -> one article:tag each (articles only). */
+  tags?: string[];
   /** One object or an array of JSON-LD graphs. */
   jsonLd?: Record<string, any> | Record<string, any>[];
 }
@@ -31,6 +33,7 @@ const {
   publishedTime,
   modifiedTime,
   author,
+  tags = [],
   jsonLd,
 } = Astro.props;
 
@@ -72,9 +75,12 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 {type === "article" && (
   <meta property="article:author" content={author ?? SITE.author} />
 )}
+{type === "article" && tags.map((t) => <meta property="article:tag" content={t} />)}
 
 {/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={TWITTER_HANDLE} />
+<meta name="twitter:creator" content={TWITTER_HANDLE} />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
