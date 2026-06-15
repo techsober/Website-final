@@ -9,7 +9,7 @@ secondaryLabel: Read the blog
 secondaryHref: /blog
 portrait: ''
 whatEyebrow: What I do
-pillarsHeading: 'Four things, done honestly'
+pillarsHeading: At TechSober You Get
 pillars:
   - icon: ai
     title: AI tools & workflows
@@ -24,8 +24,8 @@ pillars:
     title: Automation tutorials
     body: Step-by-step builds with the costs left in.
 stats:
-  - value: 4.3K
-    label: Subscribers
+  - value: 20K+
+    label: Followers
   - value: 2.4M
     label: Total views
   - value: 120+
