@@ -12,8 +12,15 @@ import EmailCapture from "@components/EmailCapture.astro";
 import Icon from "@components/Icon.astro";
 import { getProducts, formatPrice } from "@lib/content";
 import { SITE } from "@lib/site";
+import { getEntry, render } from "astro:content";
 
 const products = await getProducts();
+
+// Editable in TinaCMS → "Resources page". Header is frontmatter; the trust
+// note is the free-form rich-text body.
+const page = await getEntry("pages", "resources");
+if (!page) throw new Error("Missing content: src/content/pages/resources.md");
+const { Content } = await render(page);
 
 // Product JSON-LD for paid items (rich results).
 const jsonLd = products
@@ -45,12 +52,9 @@ const jsonLd = products
   {/* HEADER */}
   <div class="page-head">
     <div class="container">
-      <Eyebrow>Resources</Eyebrow>
-      <h1>Guides worth your time</h1>
-      <p class="sub">
-        Practical PDFs and workbooks — the workflows, checklists and honest
-        guides behind the channel. No filler, no 200-page padding.
-      </p>
+      <Eyebrow>{page.data.eyebrow}</Eyebrow>
+      <h1>{page.data.title}</h1>
+      {page.data.subtitle && <p class="sub">{page.data.subtitle}</p>}
     </div>
   </div>
 
@@ -128,15 +132,12 @@ const jsonLd = products
     </section>
   </div>
 
-  {/* TRUST */}
+  {/* TRUST — free-form rich text from the markdown body (TinaCMS-editable) */}
   <section style="padding-top:80px;padding-bottom:80px">
-    <div class="container" style="text-align:center;max-width:680px">
-      <h2 style="font-size:clamp(24px,3vw,30px)">No-fluff guarantee</h2>
-      <p style="color:var(--slate-500);margin-top:14px">
-        Everything here is the same honest standard as the channel. If a paid
-        guide isn't genuinely useful to you, email me and I'll refund it — no
-        forms, no friction.
-      </p>
+    <div class="container" style="max-width:680px">
+      <div class="prose trust-prose" style="text-align:center">
+        <Content />
+      </div>
     </div>
   </section>
 

@@ -333,6 +333,35 @@ export default defineConfig({
         ],
       },
 
+      // ───────────────────── Resources page (singleton) ─────────────────────
+      // Header is frontmatter; the "No-fluff guarantee" trust note is the
+      // rich-text body (edit it freely). Individual products live in the
+      // "Resources / Products" collection above.
+      {
+        name: "resourcesPage",
+        label: "Resources page",
+        path: "src/content/pages",
+        format: "md",
+        match: { include: "resources" },
+        ui: { allowedActions: { create: false, delete: false } },
+        fields: [
+          { type: "string", name: "eyebrow", label: "Eyebrow" },
+          { type: "string", name: "title", label: "Title" },
+          {
+            type: "string",
+            name: "subtitle",
+            label: "Subtitle",
+            ui: { component: "textarea" },
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Trust note (rich text — headings, quotes, bullets, links)",
+            isBody: true,
+          },
+        ],
+      },
+
       // ───────────────────────── Portfolio (singleton) ──────────────────────
       {
         name: "portfolio",

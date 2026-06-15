@@ -1265,6 +1265,20 @@ footer {
   line-height: 1.5;
 }
 
+/* Resources trust note: centred prose, heading flush to the top. */
+.trust-prose {
+  margin: 0 auto;
+}
+.trust-prose > :first-child {
+  margin-top: 0;
+}
+.trust-prose h2 {
+  font-size: clamp(24px, 3vw, 30px);
+}
+.trust-prose p {
+  color: var(--slate-500);
+}
+
 /* Pull-quote (About). */
 .pullquote {
   border-left: 3px solid var(--lav-300);

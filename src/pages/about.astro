@@ -68,7 +68,7 @@ const jsonLd = [
             <Button
               variant="primary"
               href={about.primaryHref}
-              external={about.primaryHref.startsWith("http")}
+              external={about.primaryHref?.startsWith("http")}
             >
               <Icon name="youtube" width={18} height={18} /> {about.primaryLabel}
             </Button>

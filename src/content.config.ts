@@ -84,23 +84,25 @@ const products = defineCollection({
 });
 
 /**
- * Singleton pages with a free-form rich-text body (e.g. About). Structured
- * bits (hero, pillars, stats) live in frontmatter; the story is the markdown
- * body so it's freely editable in TinaCMS.
+ * Singleton pages with a free-form rich-text body (About story, Resources
+ * trust note, …). Structured bits live in frontmatter; the prose body is
+ * freely editable in TinaCMS. Fields are optional so different pages can use
+ * only what they need (each has its own TinaCMS collection/UI).
  */
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/pages" }),
   schema: z.object({
     eyebrow: z.string(),
     title: z.string(),
-    intro: z.string(),
-    primaryLabel: z.string(),
-    primaryHref: z.string(),
-    secondaryLabel: z.string(),
-    secondaryHref: z.string(),
+    subtitle: z.string().optional(),
+    intro: z.string().optional(),
+    primaryLabel: z.string().optional(),
+    primaryHref: z.string().optional(),
+    secondaryLabel: z.string().optional(),
+    secondaryHref: z.string().optional(),
     portrait: z.string().optional(),
-    whatEyebrow: z.string(),
-    pillarsHeading: z.string(),
+    whatEyebrow: z.string().optional(),
+    pillarsHeading: z.string().optional(),
     pillars: z
       .array(
         z.object({
