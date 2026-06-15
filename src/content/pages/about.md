@@ -26,7 +26,7 @@ pillars:
 stats:
   - value: 20K+
     label: Followers
-  - value: 2.4M
+  - value: 5.2M
     label: Total views
   - value: 500+
     label: Videos published
