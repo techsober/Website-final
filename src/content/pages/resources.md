@@ -1,9 +1,9 @@
 ---
 eyebrow: Resources
-title: Guides worth your time
-subtitle: Practical PDFs and workbooks — the workflows, checklists and honest guides behind the channel. No filler, no 200-page padding.
+title: Guides that will 10x your growth
+subtitle: Practical PDFs and workbooks to help you learn faster
 ---
 
-## No-fluff guarantee
+## All Gold, No Gravel
 
-Everything here is the same honest standard as the channel. If a paid guide isn't genuinely useful to you, email me and I'll refund it — no forms, no friction.
+Each guide is created after multiple testing's, to provide you the absolute gold. What took me weeks to work out, you get in minutes, for a fraction of what that time is worth.
