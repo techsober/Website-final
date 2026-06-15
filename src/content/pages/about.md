@@ -1,14 +1,15 @@
 ---
 eyebrow: About
 title: Ashwin Chettiar
-intro: I'm Ashwin Chettiar, the founder of TechSober. I cover tech and AI the way I wish someone had covered it for me — honestly, with the costs, limits and marketing spin left firmly in.
+intro: |
+  TechSober, founded by Ashwin Chettiar is a content creator covering tech, gadgets and AI automation. He also builds AI agents and automations that help businesses scale and is developing a braindump app to help people manage everyday chaos.
 primaryLabel: Watch on YouTube
-primaryHref: https://www.youtube.com/@techsober
+primaryHref: 'https://www.youtube.com/@techsober'
 secondaryLabel: Read the blog
 secondaryHref: /blog
-portrait: ""
+portrait: ''
 whatEyebrow: What I do
-pillarsHeading: Four things, done honestly
+pillarsHeading: 'Four things, done honestly'
 pillars:
   - icon: ai
     title: AI tools & workflows
@@ -18,7 +19,7 @@ pillars:
     body: Long-term verdicts after the honeymoon wears off.
   - icon: graduate
     title: Short-form education
-    body: Complex tech explained in plain, honest language.
+    body: 'Complex tech explained in plain, honest language.'
   - icon: gear
     title: Automation tutorials
     body: Step-by-step builds with the costs left in.
@@ -29,18 +30,18 @@ stats:
     label: Total views
   - value: 120+
     label: Videos published
-  - value: "2021"
+  - value: '2021'
     label: Creating since
 ---
 
-## Why TechSober exists
+## AI for Business
 
-TechSober started with a simple frustration: almost everything in tech is sold to you twice — once by the company, then again by the reviewer paid to be excited. The hype machine is loud, and it rarely mentions what a thing costs you in money, time or sanity.
+I know AI can feel intimidating, but I've figured out how to build custom AI solutions for businesses so you don't have to. Trust me, it's more fun than it sounds. Let’s connect to make your business AI first.
 
-So I built the channel I wanted to watch. No breathless launch-day verdicts. No spec sheets dressed up as opinions. Just tech and AI covered after the novelty fades — when the real strengths and the quiet compromises actually show up.
+## Content Creation
 
-> The goal isn't to be negative. It's to be honest enough that you can make your own call.
+With over 2.5 million views and a loyal following, I love getting my hands-on the latest tech,  gadgets and AI, then sharing it all with my audience through creative storytelling that keeps them engaged and coming back for more. Let’s collaborate to get your brand some attention
 
-That honesty is the whole brand. When I build an AI tool, I show you the bill and where it breaks. When I review a gadget, I live with it for weeks first. When something's genuinely great, I'll say so — and you'll believe me, because I told you the truth about the last ten things.
+## Projects
 
-TechSober is independent and small on purpose. That keeps the incentives clean: I answer to the people watching, not to whoever shipped the press unit. If that sounds like the kind of tech coverage you've been missing, you're in the right place.
+The entrepreneurial bone in my body is working on building interesting solutions to solve real problems and make life a little easier. Connect with me if you want to join the journey,
