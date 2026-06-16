@@ -12,6 +12,7 @@ import Icon from "@components/Icon.astro";
 import { SITE, AUTHOR } from "@lib/site";
 import {
   resolveRelatedPosts,
+  getAuthor,
   formatDate,
   isoDate,
   readingTime,
@@ -51,6 +52,24 @@ const {
 const minutes = readingTime(post.body, post.data.readingTime);
 const catSlug = slugifyCategory(category);
 const related = await resolveRelatedPosts(relatedPosts, post, 3);
+
+// Resolve the post's author to an Authors-collection entry (guest writers),
+// merging onto the default author from site.ts as a fallback.
+const entry = await getAuthor(post.data.author);
+const author = {
+  name: entry?.name ?? AUTHOR.name,
+  role: entry?.role ?? AUTHOR.role,
+  bio: entry?.bio ?? AUTHOR.bio,
+  avatar: entry?.avatar ?? AUTHOR.avatar,
+  url: entry?.url ?? AUTHOR.url,
+  sameAs: entry?.sameAs?.length ? entry.sameAs : AUTHOR.sameAs,
+};
+const authorInitials = author.name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
 const pageUrl = new URL(`/blog/${post.id}`, SITE.url).href;
 const ogImage = ogImageField ?? cover ?? SITE.ogImage;
 const blogThumb = "background:linear-gradient(135deg,var(--off),#EBE1F8)";
@@ -71,11 +90,11 @@ const articleLd: Record<string, any> = {
   dateModified: isoDate(updated),
   author: {
     "@type": "Person",
-    name: AUTHOR.name,
-    url: new URL(AUTHOR.url, SITE.url).href,
-    image: new URL(AUTHOR.avatar, SITE.url).href,
-    jobTitle: AUTHOR.role,
-    sameAs: AUTHOR.sameAs,
+    name: author.name,
+    url: new URL(author.url, SITE.url).href,
+    image: new URL(author.avatar, SITE.url).href,
+    jobTitle: author.role,
+    sameAs: author.sameAs,
   },
   publisher: {
     "@type": "Organization",
@@ -158,7 +177,7 @@ if (faqs.length) {
   image={ogImage}
   publishedTime={date.toISOString()}
   modifiedTime={updated.toISOString()}
-  author={AUTHOR.name}
+  author={author.name}
   tags={tags}
   jsonLd={jsonLd}
 >
@@ -178,7 +197,7 @@ if (faqs.length) {
             class="meta"
             style="margin-top:18px;color:var(--slate-500);font-size:14.5px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"
           >
-            <span>By {AUTHOR.name}</span>
+            <span>By {author.name}</span>
             <span class="sep" style="width:4px;height:4px;border-radius:50%;background:var(--slate-300);display:inline-block"></span>
             <time datetime={isoDate(date)}>{formatDate(date)}</time>
             {
@@ -360,23 +379,23 @@ if (faqs.length) {
         <div class="author-box">
           <div class="author-avatar">
             <img
-              src={AUTHOR.avatar}
-              alt={`${AUTHOR.name} — ${AUTHOR.role}`}
+              src={author.avatar}
+              alt={`${author.name} — ${author.role}`}
               width="72"
               height="72"
               loading="lazy"
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
             />
-            <span class="author-monogram" aria-hidden="true">AC</span>
+            <span class="author-monogram" aria-hidden="true">{authorInitials}</span>
           </div>
           <div class="author-meta">
-            <div class="author-name">{AUTHOR.name}</div>
-            <div class="author-role">{AUTHOR.role}</div>
-            <p class="author-bio">{AUTHOR.bio}</p>
+            <div class="author-name">{author.name}</div>
+            <div class="author-role">{author.role}</div>
+            <p class="author-bio">{author.bio}</p>
             <div class="author-links">
-              <a href={AUTHOR.url}>About</a>
+              <a href={author.url}>About</a>
               {
-                AUTHOR.sameAs.map((u) => (
+                author.sameAs.map((u) => (
                   <a href={u} target="_blank" rel="noopener noreferrer me">
                     {u.includes("youtube")
                       ? "YouTube"
@@ -386,7 +405,9 @@ if (faqs.length) {
                           ? "Instagram"
                           : u.includes("tiktok")
                             ? "TikTok"
-                            : "X"}
+                            : u.includes("x.com") || u.includes("twitter")
+                              ? "X"
+                              : "Website"}
                   </a>
                 ))
               }

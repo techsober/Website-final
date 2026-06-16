@@ -101,6 +101,7 @@ redeploy. The schema (`tina/config.ts`) covers:
 | In TinaCMS | Edits | Lives in |
 |---|---|---|
 | **Blog Posts** | articles | `src/content/blog/*.md` |
+| **Authors** | guest writers (name, bio, photo, links) | `src/content/authors/*.md` |
 | **Projects** | project landing pages | `src/content/projects/*.md` |
 | **Resources / Products** | PDFs, prices, Payment Links | `src/content/products/*.md` |
 | **Homepage** | hero, nav cards, featured work, headings | `src/data/home.json` |
@@ -146,6 +147,49 @@ draft: false # true hides it from the live site
 New posts appear automatically on `/blog`, the right `/blog/category/...` page,
 the homepage's latest-three, and the search index. Drafts are visible in `npm
 run dev` but excluded from production builds.
+
+---
+
+## Blog SEO field cheat-sheet
+
+Every field is optional with a sensible fallback — fill what helps, skip the
+rest. Lengths are guidance, not hard limits.
+
+| Field | What it does | Ideal length |
+|---|---|---|
+| **Title** | The `<h1>` and default `<title>`. | 40–60 chars |
+| **SEO title** | Overrides `<title>`/`og:title`. Put the keyword first. Falls back to Title. | ≤ 60 chars |
+| **Meta description** | The Google/social snippet. Front-load the answer. | 140–160 chars |
+| **Excerpt** | Card + RSS summary. Falls back to the meta description. | 120–160 chars |
+| **Tags** | Keywords → `article:tag` + internal linking. | 3–8 tags |
+| **Category** | Section + crawlable `/blog/category/…` route. | pick one |
+| **Publish date** / **Last updated** | `datePublished` / `dateModified` + sitemap `lastmod`. Set "Last updated" when you meaningfully revise a post. | — |
+| **Cover image** | Top-of-post image + social fallback. 16:9. | 1200×675, < 300 KB |
+| **Social image (ogImage)** | Dedicated share card. Falls back to cover. | 1200×630 |
+| **Key takeaways** | Answer-first box at the top — wins featured snippets + AI citations. | 3–5 bullets, 1 line each |
+| **FAQ** | Visible Q&A + `FAQPage` schema. Answers must match the page. | 3–6 Q&As; answers 1–3 sentences |
+| **Article type** | Schema type: BlogPosting / NewsArticle / Review / HowTo. | default BlogPosting |
+| **Review** (Review type) | `productName`, `rating` 1–5, `pros`, `cons` → star rating in Google + verdict box. | 3–5 pros/cons |
+| **HowTo steps** (HowTo type) | Numbered steps + HowTo schema (mainly for AI engines). | — |
+| **Sources** | Visible outbound citations (title + URL). Boosts trust + AI citation. | 2–6 |
+| **Related posts** | Curated internal links (enter slugs — the bit after `/blog/`). Falls back to same-category. | up to 3 |
+| **Author** | Matches an **Authors** entry by name (below). Blank = default author. | — |
+| **Canonical URL** | Only if the post was first published elsewhere. Otherwise leave blank. | — |
+| **Focus keyword** | Your own note; not rendered. | — |
+| **Featured** | Pins the post to the top of the blog with a badge. | — |
+| **noindex** | Hides the post from search engines (still reachable by link). | — |
+
+## Authors (guest writers)
+
+Authors live in their own collection (**TinaCMS → Authors**, files in
+`src/content/authors/`). Each has a name, role, bio, headshot, and social
+links (`sameAs`). A post's **Author** field is matched to an entry by name (or
+slug); the matched author's photo, bio and links power the byline, the author
+box, and the `Person` JSON-LD. Unmatched (or blank) posts fall back to the
+default author in `src/lib/site.ts`.
+
+To add a guest writer: create an Authors entry, then set a post's **Author**
+field to their name. No code needed.
 
 ---
 
