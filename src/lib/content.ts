@@ -37,6 +37,13 @@ export async function getPublishedPosts(): Promise<Post[]> {
   );
 }
 
+/** Pin featured posts to the top, preserving date order within each group. */
+export function sortFeaturedFirst(posts: Post[]): Post[] {
+  return [...posts].sort(
+    (a, b) => Number(b.data.featured) - Number(a.data.featured),
+  );
+}
+
 /** Posts in a single category (case-insensitive match on the slugified cat). */
 export async function getPostsByCategory(cat: string): Promise<Post[]> {
   const all = await getPublishedPosts();

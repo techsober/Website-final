@@ -6,11 +6,11 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import BlogArchive from "@components/BlogArchive.astro";
 import YouTubeRail from "@components/YouTubeRail.astro";
-import { getPublishedPosts } from "@lib/content";
+import { getPublishedPosts, sortFeaturedFirst } from "@lib/content";
 import { SITE } from "@lib/site";
 
 const PAGE_SIZE = 6;
-const all = await getPublishedPosts();
+const all = sortFeaturedFirst(await getPublishedPosts());
 const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
 const posts = all.slice(0, PAGE_SIZE);
 

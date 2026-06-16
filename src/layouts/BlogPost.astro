@@ -40,6 +40,12 @@ const {
   ogImage: ogImageField,
   sources,
   relatedPosts,
+  noindex,
+  productName,
+  rating,
+  pros,
+  cons,
+  howToSteps,
 } = post.data;
 
 const minutes = readingTime(post.body, post.data.readingTime);
@@ -86,6 +92,38 @@ const articleLd: Record<string, any> = {
   ...(tags.length ? { keywords: tags.join(", ") } : {}),
 };
 
+// Review rich result (first-party review): adds star rating + the item reviewed.
+const isReview = articleType === "Review" && typeof rating === "number";
+if (isReview) {
+  articleLd.itemReviewed = {
+    "@type": "Product",
+    name: productName || title,
+  };
+  articleLd.reviewRating = {
+    "@type": "Rating",
+    ratingValue: rating,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
+
+// HowTo steps (mainly for AI engines; HowTo rich results were retired in Google).
+const isHowTo = articleType === "HowTo" && howToSteps.length > 0;
+if (isHowTo) {
+  articleLd.step = howToSteps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: s.name,
+    text: s.text,
+    ...(s.image ? { image: new URL(s.image, SITE.url).href } : {}),
+  }));
+}
+
+const stars = isReview
+  ? "★".repeat(Math.round(rating as number)) +
+    "☆".repeat(5 - Math.round(rating as number))
+  : "";
+
 const breadcrumbLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -115,6 +153,7 @@ if (faqs.length) {
   title={headTitle}
   description={description}
   canonical={canonicalUrl}
+  noindex={noindex}
   type="article"
   image={ogImage}
   publishedTime={date.toISOString()}
@@ -196,6 +235,54 @@ if (faqs.length) {
       )
     }
 
+    {/* REVIEW VERDICT — star rating + pros/cons (Review rich result) */}
+    {
+      isReview && (
+        <div class="container">
+          <aside
+            class="verdict"
+            style="max-width:720px;margin:24px auto 0"
+            aria-label="Review verdict"
+          >
+            <div class="verdict-head">
+              <div>
+                <div class="verdict-label">Verdict</div>
+                <div class="verdict-product">{productName || title}</div>
+              </div>
+              <div class="verdict-rating">
+                <span class="stars" aria-hidden="true">{stars}</span>
+                <span class="verdict-score">{rating}/5</span>
+              </div>
+            </div>
+            {(pros.length > 0 || cons.length > 0) && (
+              <div class="verdict-grid">
+                {pros.length > 0 && (
+                  <div>
+                    <h3 class="pros-title">Pros</h3>
+                    <ul class="pros">
+                      {pros.map((p) => (
+                        <li>{p}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {cons.length > 0 && (
+                  <div>
+                    <h3 class="cons-title">Cons</h3>
+                    <ul class="cons">
+                      {cons.map((c) => (
+                        <li>{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </aside>
+        </div>
+      )
+    }
+
     {/* BODY */}
     <section style="padding-top:40px">
       <div class="container">
@@ -204,6 +291,27 @@ if (faqs.length) {
         </div>
       </div>
     </section>
+
+    {/* HOW-TO STEPS */}
+    {
+      isHowTo && (
+        <section style="padding-top:8px">
+          <div class="container">
+            <div class="howto">
+              <h2 class="howto-title">Steps</h2>
+              <ol>
+                {howToSteps.map((s) => (
+                  <li>
+                    <strong>{s.name}</strong>
+                    <p>{s.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+      )
+    }
 
     {/* FAQ — visible Q&A (matches FAQPage JSON-LD) */}
     {

@@ -3,6 +3,17 @@ title: "The honest headphone review: two weeks later"
 description: "Spec sheets sell headphones; two weeks of real use exposes them. Comfort, call quality and the quiet compromises that don't show up on a feature list."
 category: "Review"
 date: 2026-04-20
+articleType: "Review"
+productName: "Premium wireless ANC headphones"
+rating: 4
+pros:
+  - "Genuinely comfortable past the three-hour mark"
+  - "ANC holds up on commutes and in open offices"
+  - "Battery beats the rated figure in real use"
+cons:
+  - "Call quality is average despite the marketing"
+  - "Companion app nags and bloats over time"
+featured: true
 draft: false
 ---
 

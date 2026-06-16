@@ -200,6 +200,59 @@ export default defineConfig({
             name: "focusKeyword",
             label: "Focus keyword (your reference only — not shown on the page)",
           },
+          {
+            type: "boolean",
+            name: "featured",
+            label: "Featured (pins to the top of the blog)",
+          },
+          {
+            type: "boolean",
+            name: "noindex",
+            label: "Hide from search engines (noindex)",
+          },
+          {
+            type: "number",
+            name: "rating",
+            label: "Review rating 1–5 (only when Article type = Review)",
+          },
+          {
+            type: "string",
+            name: "productName",
+            label: "Reviewed product name (Review only)",
+          },
+          {
+            type: "string",
+            name: "pros",
+            label: "Pros (Review only)",
+            list: true,
+          },
+          {
+            type: "string",
+            name: "cons",
+            label: "Cons (Review only)",
+            list: true,
+          },
+          {
+            type: "object",
+            name: "howToSteps",
+            label: "How-to steps (only when Article type = HowTo)",
+            list: true,
+            ui: {
+              itemProps: (item: { name?: string }) => ({
+                label: item?.name || "Step",
+              }),
+            },
+            fields: [
+              { type: "string", name: "name", label: "Step name" },
+              {
+                type: "string",
+                name: "text",
+                label: "Step detail",
+                ui: { component: "textarea" },
+              },
+              { type: "image", name: "image", label: "Step image (optional)" },
+            ],
+          },
 
           { type: "rich-text", name: "body", label: "Body", isBody: true },
         ],

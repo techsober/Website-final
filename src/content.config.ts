@@ -58,6 +58,25 @@ const blog = defineCollection({
     relatedPosts: z.array(z.string()).default([]),
     /** Author-only focus keyword (not rendered). */
     focusKeyword: z.string().optional(),
+
+    // --- Tier 3 (Phase 4) ---
+    noindex: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    /** Review fields (used when articleType === "Review"). */
+    productName: z.string().optional(),
+    rating: z.number().min(1).max(5).optional(),
+    pros: z.array(z.string()).default([]),
+    cons: z.array(z.string()).default([]),
+    /** HowTo steps (used when articleType === "HowTo"). */
+    howToSteps: z
+      .array(
+        z.object({
+          name: z.string(),
+          text: z.string(),
+          image: z.string().optional(),
+        }),
+      )
+      .default([]),
   }),
 });
 

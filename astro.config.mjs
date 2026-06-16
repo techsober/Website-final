@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // The canonical production URL. Override with the SITE env var at build time
 // (e.g. on Cloudflare Pages) so canonical URLs + sitemap point at the live host.
@@ -22,6 +24,27 @@ function rehypeLazyImages() {
   };
 }
 
+// Map each blog post URL to its freshness date (updatedDate || date) for
+// accurate sitemap <lastmod>. Read at config time straight from frontmatter.
+function blogLastmodMap() {
+  const dir = path.resolve('./src/content/blog');
+  /** @type {Record<string,string>} */
+  const map = {};
+  if (!fs.existsSync(dir)) return map;
+  for (const file of fs.readdirSync(dir)) {
+    if (!/\.mdx?$/.test(file)) continue;
+    const slug = file.replace(/\.mdx?$/, '');
+    const src = fs.readFileSync(path.join(dir, file), 'utf8');
+    const fm = (src.match(/^---\s*([\s\S]*?)\s*---/) || [, ''])[1];
+    const read = (k) =>
+      (fm.match(new RegExp(`^${k}:\\s*'?"?([^'"\\n]+)`, 'm')) || [])[1];
+    const lastmod = (read('updatedDate') || read('date') || '').trim();
+    if (lastmod) map[`/blog/${slug}`] = lastmod;
+  }
+  return map;
+}
+const BLOG_LASTMOD = blogLastmodMap();
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
@@ -32,6 +55,12 @@ export default defineConfig({
     sitemap({
       // Drop draft/admin-ish routes from the sitemap if they ever appear.
       filter: (page) => !page.includes('/admin'),
+      serialize(item) {
+        const pathname = new URL(item.url).pathname.replace(/\/$/, '');
+        const lastmod = BLOG_LASTMOD[pathname];
+        if (lastmod) item.lastmod = new Date(lastmod).toISOString();
+        return item;
+      },
     }),
   ],
   markdown: {

@@ -25,6 +25,7 @@ interface Props {
   placeholder?: string;
   thumbStyle?: string;
   loading?: "lazy" | "eager";
+  featured?: boolean;
   class?: string;
 }
 
@@ -41,6 +42,7 @@ const {
   placeholder,
   thumbStyle,
   loading = "lazy",
+  featured = false,
   class: className = "",
 } = Astro.props;
 ---
@@ -48,6 +50,7 @@ const {
 <article class={`card ${className}`.trim()}>
   <div class="thumb" style={thumbStyle}>
     {category && <Chip top>{category}</Chip>}
+    {featured && <span class="featured-pill">★ Featured</span>}
     {
       image ? (
         href ? (
