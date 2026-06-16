@@ -11,7 +11,7 @@ import Giscus from "@components/Giscus.astro";
 import Icon from "@components/Icon.astro";
 import { SITE, AUTHOR } from "@lib/site";
 import {
-  getRelatedPosts,
+  resolveRelatedPosts,
   formatDate,
   isoDate,
   readingTime,
@@ -37,13 +37,16 @@ const {
   keyTakeaways,
   faqs,
   articleType,
+  ogImage: ogImageField,
+  sources,
+  relatedPosts,
 } = post.data;
 
 const minutes = readingTime(post.body, post.data.readingTime);
 const catSlug = slugifyCategory(category);
-const related = await getRelatedPosts(post, 3);
+const related = await resolveRelatedPosts(relatedPosts, post, 3);
 const pageUrl = new URL(`/blog/${post.id}`, SITE.url).href;
-const ogImage = cover ?? SITE.ogImage;
+const ogImage = ogImageField ?? cover ?? SITE.ogImage;
 const blogThumb = "background:linear-gradient(135deg,var(--off),#EBE1F8)";
 
 // SEO fallbacks
@@ -221,6 +224,28 @@ if (faqs.length) {
       )
     }
 
+    {/* SOURCES — outbound citations (E-E-A-T + AI trust) */}
+    {
+      sources.length > 0 && (
+        <section style="padding-top:8px">
+          <div class="container">
+            <div class="sources">
+              <h2 class="sources-title">Sources</h2>
+              <ul>
+                {sources.map((s) => (
+                  <li>
+                    <a href={s.url} target="_blank" rel="noopener noreferrer">
+                      {s.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
     {/* AUTHOR BIO — E-E-A-T */}
     <section style="padding-top:48px">
       <div class="container">
@@ -280,7 +305,7 @@ if (faqs.length) {
                   href={`/blog/${r.id}`}
                   category={r.data.category}
                   title={r.data.title}
-                  excerpt={r.data.description}
+                  excerpt={r.data.excerpt ?? r.data.description}
                   placeholder="Cover"
                   image={r.data.cover}
                   imageAlt={r.data.coverAlt ?? r.data.title}

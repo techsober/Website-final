@@ -44,6 +44,20 @@ const blog = defineCollection({
     articleType: z
       .enum(["BlogPosting", "NewsArticle", "Review", "HowTo"])
       .default("BlogPosting"),
+
+    // --- Tier 2 (Phase 3) ---
+    /** Card / RSS summary. Falls back to `description`. */
+    excerpt: z.string().optional(),
+    /** Dedicated 1200×630 social image. Falls back to cover, then default. */
+    ogImage: z.string().optional(),
+    /** Outbound sources/citations (E-E-A-T + AI citation trust). */
+    sources: z
+      .array(z.object({ title: z.string(), url: z.string() }))
+      .default([]),
+    /** Manual related-post refs (paths/slugs). Falls back to same-category. */
+    relatedPosts: z.array(z.string()).default([]),
+    /** Author-only focus keyword (not rendered). */
+    focusKeyword: z.string().optional(),
   }),
 });
 
