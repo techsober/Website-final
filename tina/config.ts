@@ -262,41 +262,6 @@ export default defineConfig({
         ],
       },
 
-      // ───────────────────────────── Authors ────────────────────────────────
-      {
-        name: "author",
-        label: "Authors",
-        path: "src/content/authors",
-        format: "md",
-        ui: {
-          filename: {
-            slugify: (values: { name?: string }) =>
-              (values?.name || "author")
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/(^-|-$)/g, ""),
-          },
-        },
-        fields: [
-          { type: "string", name: "name", label: "Name", isTitle: true, required: true },
-          { type: "string", name: "role", label: "Role / title" },
-          {
-            type: "string",
-            name: "bio",
-            label: "Bio (one or two sentences)",
-            ui: { component: "textarea" },
-          },
-          { type: "image", name: "avatar", label: "Headshot" },
-          { type: "string", name: "url", label: "Profile / About URL" },
-          {
-            type: "string",
-            name: "sameAs",
-            label: "Social / profile links",
-            list: true,
-          },
-        ],
-      },
-
       // ───────────────────────────── Projects ───────────────────────────────
       {
         name: "project",

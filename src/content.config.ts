@@ -171,23 +171,4 @@ const pages = defineCollection({
   }),
 });
 
-/**
- * Authors — the people behind posts (E-E-A-T). A post's `author` string is
- * matched to an entry here by name or slug; unmatched posts fall back to the
- * default author in site.ts. Lets you add guest writers without code.
- */
-const authors = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/authors" }),
-  schema: z.object({
-    name: z.string(),
-    role: z.string().optional(),
-    bio: z.string().optional(),
-    avatar: z.string().optional(),
-    /** Profile/about URL (this site or external). */
-    url: z.string().optional(),
-    /** Social/profile links -> Person JSON-LD sameAs. */
-    sameAs: z.array(z.string()).default([]),
-  }),
-});
-
-export const collections = { blog, projects, products, pages, authors };
+export const collections = { blog, projects, products, pages };

@@ -8,7 +8,6 @@ import { getCollection, getEntry, type CollectionEntry } from "astro:content";
 export type Post = CollectionEntry<"blog">;
 export type Project = CollectionEntry<"projects">;
 export type Product = CollectionEntry<"products">;
-export type Author = CollectionEntry<"authors">["data"];
 
 /**
  * Show drafts on the local dev server AND on Cloudflare preview branches
@@ -71,26 +70,6 @@ export async function getProducts(): Promise<Product[]> {
     (a, b) =>
       a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
   );
-}
-
-/**
- * Resolve a post's `author` string (a name or slug) to an Authors entry.
- * Returns undefined if there's no match (caller falls back to the default).
- */
-export async function getAuthor(
-  nameOrSlug: string | undefined,
-): Promise<Author | undefined> {
-  if (!nameOrSlug) return undefined;
-  const key = nameOrSlug.trim().toLowerCase();
-  const keySlug = key.replace(/\s+/g, "-");
-  const authors = await getCollection("authors");
-  const match = authors.find(
-    (a) =>
-      a.data.name.toLowerCase() === key ||
-      a.id.toLowerCase() === key ||
-      a.id.toLowerCase() === keySlug,
-  );
-  return match?.data;
 }
 
 const CURRENCY_SYMBOL: Record<string, string> = {

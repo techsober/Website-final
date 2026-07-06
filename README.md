@@ -101,7 +101,6 @@ redeploy. The schema (`tina/config.ts`) covers:
 | In TinaCMS | Edits | Lives in |
 |---|---|---|
 | **Blog Posts** | articles | `src/content/blog/*.md` |
-| **Authors** | guest writers (name, bio, photo, links) | `src/content/authors/*.md` |
 | **Projects** | project landing pages | `src/content/projects/*.md` |
 | **Resources / Products** | PDFs, prices, Payment Links | `src/content/products/*.md` |
 | **Homepage** | hero, nav cards, featured work, headings | `src/data/home.json` |
@@ -173,23 +172,14 @@ rest. Lengths are guidance, not hard limits.
 | **HowTo steps** (HowTo type) | Numbered steps + HowTo schema (mainly for AI engines). | — |
 | **Sources** | Visible outbound citations (title + URL). Boosts trust + AI citation. | 2–6 |
 | **Related posts** | Curated internal links (enter slugs — the bit after `/blog/`). Falls back to same-category. | up to 3 |
-| **Author** | Matches an **Authors** entry by name (below). Blank = default author. | — |
+| **Author** | Byline name. Blank = the default author in `src/lib/site.ts`. | — |
 | **Canonical URL** | Only if the post was first published elsewhere. Otherwise leave blank. | — |
 | **Focus keyword** | Your own note; not rendered. | — |
 | **Featured** | Pins the post to the top of the blog with a badge. | — |
 | **noindex** | Hides the post from search engines (still reachable by link). | — |
 
-## Authors (guest writers)
-
-Authors live in their own collection (**TinaCMS → Authors**, files in
-`src/content/authors/`). Each has a name, role, bio, headshot, and social
-links (`sameAs`). A post's **Author** field is matched to an entry by name (or
-slug); the matched author's photo, bio and links power the byline, the author
-box, and the `Person` JSON-LD. Unmatched (or blank) posts fall back to the
-default author in `src/lib/site.ts`.
-
-To add a guest writer: create an Authors entry, then set a post's **Author**
-field to their name. No code needed.
+The author byline, photo, bio box and `Person` JSON-LD come from the single
+author defined in `src/lib/site.ts` (`AUTHOR`).
 
 ---
 

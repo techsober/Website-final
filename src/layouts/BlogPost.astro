@@ -12,7 +12,6 @@ import Icon from "@components/Icon.astro";
 import { SITE, AUTHOR } from "@lib/site";
 import {
   resolveRelatedPosts,
-  getAuthor,
   formatDate,
   isoDate,
   readingTime,
@@ -53,17 +52,8 @@ const minutes = readingTime(post.body, post.data.readingTime);
 const catSlug = slugifyCategory(category);
 const related = await resolveRelatedPosts(relatedPosts, post, 3);
 
-// Resolve the post's author to an Authors-collection entry (guest writers),
-// merging onto the default author from site.ts as a fallback.
-const entry = await getAuthor(post.data.author);
-const author = {
-  name: entry?.name ?? AUTHOR.name,
-  role: entry?.role ?? AUTHOR.role,
-  bio: entry?.bio ?? AUTHOR.bio,
-  avatar: entry?.avatar ?? AUTHOR.avatar,
-  url: entry?.url ?? AUTHOR.url,
-  sameAs: entry?.sameAs?.length ? entry.sameAs : AUTHOR.sameAs,
-};
+// Author identity from site.ts (single default author).
+const author = AUTHOR;
 const authorInitials = author.name
   .split(/\s+/)
   .map((w) => w[0])
