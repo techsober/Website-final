@@ -34,14 +34,14 @@ stats:
     label: Creating since
 ---
 
-## AI for Business
+### AI for Business
 
-I know AI can feel intimidating, but I've figured out how to build custom AI solutions for businesses so you don't have to. Trust me, it's more fun than it sounds. Let’s connect to make your business AI first.
+### I know AI can feel intimidating, but I've figured out how to build custom AI solutions for businesses so you don't have to. Trust me, it's more fun than it sounds. Let’s connect to make your business AI first.
 
-## Content Creation
+### Content Creation
 
-With over 2.5 million views and a loyal following, I love getting my hands-on the latest tech,  gadgets and AI, then sharing it all with my audience through creative storytelling that keeps them engaged and coming back for more. Let’s collaborate to get your brand some attention
+### With over 2.5 million views and a loyal following, I love getting my hands-on the latest tech,  gadgets and AI, then sharing it all with my audience through creative storytelling that keeps them engaged and coming back for more. Let’s collaborate to get your brand some attention
 
-## Projects
+### Projects
 
-The entrepreneurial bone in my body is working on building interesting solutions to solve real problems and make life a little easier. Connect with me if you want to join the journey,
+### The entrepreneurial bone in my body is working on building interesting solutions to solve real problems and make life a little easier. Connect with me if you want to join the journey,
