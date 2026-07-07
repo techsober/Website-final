@@ -1,0 +1,12 @@
+---
+description: Cloudflare Pages Functions rules
+globs: functions/**
+---
+
+- `functions/api/*.ts` run in the Cloudflare Workers runtime (Web APIs, not Node);
+  own tsconfig, excluded from the Astro build. Typecheck:
+  `npx tsc -p functions/tsconfig.json --noEmit`.
+- Guard every integration on env presence and degrade gracefully (site must build with no keys).
+- Validate + length-limit inputs; keep honeypots; reuse `functions/_utils.ts`.
+- Read secrets from the `env` param, never `import.meta.env`; never hardcode keys/URLs.
+- Prefer Web-standard APIs over heavy dependencies.

@@ -1,0 +1,13 @@
+---
+description: TechSober project context for all changes
+alwaysApply: true
+---
+
+- Canonical instructions live in **`AGENTS.md`** (repo root) — read it. This file
+  is a short pointer; area-specific rules load by path.
+- Static **Astro 5** site (no SSR) + **Cloudflare Pages Functions**,
+  **TypeScript**, vanilla CSS tokens, content via **TinaCMS**. Package manager: npm.
+- Branches: `main` = production (TinaCloud-indexed), `dev` = preview. Work on `dev`.
+- Gate before finishing: `npm run build:nofind` (+ `npx tsc -p functions/tsconfig.json --noEmit` if you touched `functions/`).
+- Small diffs; reuse existing components/tokens; no new deps without reason; never commit secrets.
+- ⚠️ Editing `tina/config.ts` requires regenerating + verifying `tina/tina-lock.json` (see `AGENTS.md`), or the live `/admin` breaks.

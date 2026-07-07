@@ -1,0 +1,12 @@
+---
+description: Content & TinaCMS rules
+globs: src/content/**,src/data/**,src/content.config.ts,tina/**
+---
+
+- This area is CMS-owned (owner edits live via TinaCMS → commits to `main`).
+  `git fetch` + rebase before editing; prefer code changes to content edits.
+- Frontmatter must satisfy the Zod schema in `src/content.config.ts`.
+- Any `tina/config.ts` change requires regenerating + verifying `tina/tina-lock.json`,
+  kept in sync with `src/content.config.ts`, or the live `/admin` breaks.
+- A Tina `reference` list to the same collection breaks codegen — use a slug string list.
+- No secrets in content/data files.
