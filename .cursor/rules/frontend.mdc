@@ -1,0 +1,12 @@
+---
+description: Astro components & styling rules
+globs: src/**/*.astro,src/styles/**,src/lib/**
+---
+
+- Reuse existing components + `src/styles/tokens.css` before adding new ones; no
+  CSS framework, no ad-hoc colours/spacing.
+- HTML-first: static by default; add `<script>` only for real interactivity;
+  respect `prefers-reduced-motion`.
+- A11y: one `<h1>` per page, semantic landmarks, keyboard focus, `alt` text.
+- Data UI: handle loading/empty/error/success; lazy + size below-fold images (no CLS).
+- Route pages through `BaseLayout`; keep `Seo.astro` meta/JSON-LD/canonical intact.
